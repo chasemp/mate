@@ -46,6 +46,7 @@ html, body {
 .logo-container {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .mate-logo {
@@ -53,6 +54,45 @@ html, body {
   width: auto;
   max-width: 200px;
   object-fit: contain;
+}
+
+.new-game-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.new-game-header-btn:hover {
+  background: linear-gradient(135deg, #357abd, #2c5aa0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.new-game-header-btn:active {
+  transform: scale(0.95);
+}
+
+.new-game-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.new-game-text {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .turn-indicator-header {
@@ -739,6 +779,20 @@ button:disabled {
     max-width: 150px;
   }
   
+  .new-game-header-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+  
+  .new-game-icon {
+    font-size: 14px;
+  }
+  
+  .new-game-text {
+    font-size: 11px;
+  }
+  
   .turn-indicator-header {
     max-width: 150px;
   }
@@ -830,6 +884,20 @@ button:disabled {
   .mate-logo {
     height: 30px;
     max-width: 120px;
+  }
+  
+  .new-game-header-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 3px;
+  }
+  
+  .new-game-icon {
+    font-size: 12px;
+  }
+  
+  .new-game-text {
+    font-size: 9px;
   }
   
   .turn-indicator-header {
