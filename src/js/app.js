@@ -281,6 +281,13 @@ class ChessApp {
       // Animate the move
       this.animateMove(fromRow, fromCol, toRow, toCol, movingPiece, capturedPiece);
       
+      // Trigger AI move if it's AI's turn
+      if (this.aiManager.isAITurn()) {
+        setTimeout(() => {
+          this.aiManager.makeAIMove();
+        }, 1000); // Wait 1 second after player move
+      }
+      
     } else {
       console.log('Illegal move');
       this.soundManager.play('illegal');
@@ -481,7 +488,7 @@ class ChessApp {
     // Clear saved game (starting fresh)
     this.clearSavedGame();
     
-    await this.aiManager.startAIGame(aiColor, skillLevel);
+    await this.aiManager.startVsComputer(aiColor, skillLevel);
     this.render();
     this.updateGameInfo();
     this.showNotification(`🤖 AI game started! (Level ${skillLevel})`);
@@ -940,7 +947,7 @@ class ChessApp {
       
       // Restore AI state if applicable
       if (gameState.isAIGame) {
-        this.aiManager.startAIGame(gameState.aiColor, gameState.aiSkillLevel);
+        this.aiManager.startVsComputer(gameState.aiColor, gameState.aiSkillLevel);
       }
       
       // Update last move for highlighting
