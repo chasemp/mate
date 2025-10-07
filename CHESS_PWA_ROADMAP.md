@@ -2596,6 +2596,81 @@ src/
 ### **Phase 10: Checkers Implementation** 🔴 (5-7 days)
 *Add Checkers as second game*
 
+### **Phase 11: Advanced Features** 📊 (2-3 days)
+*Statistics, tournaments, variants, and AI settings*
+
+### **Phase 12: Social Features** 👥 (3-4 days)
+*Player profiles, friend system, and enhanced sharing*
+
+### **Phase 13: Web3 Identity & Cryptographic Signing** 🔐 (4-5 days)
+*Cryptographic identity, secure key storage, and move provenance*
+
+**Goal:** Add Web3 cryptographic features for player identity, move signing, and score provenance
+
+#### **Phase 13.1: Secure Key Storage System** (1-2 days)
+- **User Authentication Methods:**
+  - Passphrase-based encryption (PBKDF2)
+  - Pattern/PIN-based encryption
+  - Biometric authentication (WebAuthn)
+  - Hardware security module support
+- **Key Derivation:**
+  - PBKDF2 with 100,000+ iterations
+  - Salt generation and storage
+  - Key stretching for additional security
+- **Encryption Standards:**
+  - AES-256-GCM for private key encryption
+  - Secure random IV generation
+  - Authenticated encryption for integrity
+
+#### **Phase 13.2: Cryptographic Identity** (1-2 days)
+- **Key Generation:**
+  - ECDSA P-256 key pairs
+  - Ed25519 support for advanced users
+  - Deterministic key generation from seed phrases
+- **Identity Management:**
+  - Username/avatar with cryptographic binding
+  - Public key fingerprinting
+  - Identity verification system
+- **Key Recovery:**
+  - Seed phrase generation (BIP39)
+  - Secure backup and restore
+  - Multi-device synchronization
+
+#### **Phase 13.3: Move Signing & Verification** (1-2 days)
+- **Move Signing:**
+  - Cryptographic signing of all game moves
+  - Timestamp and nonce inclusion
+  - Game state hash verification
+- **Verification System:**
+  - Public key signature verification
+  - Move authenticity validation
+  - Replay attack prevention
+- **URL Enhancement:**
+  - Signed game invitations
+  - Tamper-proof game state sharing
+  - Player identity verification
+
+#### **Phase 13.4: Score Provenance & Leaderboards** (1 day)
+- **Cryptographic Scores:**
+  - Signed high score submissions
+  - Tamper-proof leaderboards
+  - Achievement provenance tracking
+- **Verification System:**
+  - Score authenticity validation
+  - Public verification of records
+  - Anti-cheat mechanisms
+
+**Security Requirements:**
+- Private keys never stored in plaintext
+- User authentication required for key access
+- Secure key derivation with strong entropy
+- Hardware security module support
+- Biometric authentication integration
+
+**See:** `WEB3_IMPLEMENTATION.md` for full details
+
+---
+
 **Goal:** Launch with two complete games: Chess + Checkers
 
 **See:** `CHECKERS_IMPLEMENTATION.md` for full details
@@ -2789,8 +2864,11 @@ That's it! Every push to main automatically deploys `/docs`.
 | **Phase 6** | Settings & Themes | 1-2 days | High | ✅ Partial (themes done) |
 | **Phase 7** | PWA Enhancements | 2-3 days | High | 📋 Planned |
 | **Phase 8** | Polish & Production | 2-3 days | Medium | 📋 Planned |
-| **Phase 9** | Multi-Game Foundation | 2-3 days | Future | 📋 Planned |
-| **Phase 10** | Checkers Implementation | 5-7 days | Future | 📋 Planned |
+| **Phase 9** | Multi-Game Foundation | 2-3 days | Future | ✅ Done |
+| **Phase 10** | Checkers Implementation | 5-7 days | Future | ✅ Done |
+| **Phase 11** | Advanced Features | 2-3 days | High | ✅ Done |
+| **Phase 12** | Social Features | 3-4 days | High | 📋 Planned |
+| **Phase 13** | Web3 Identity & Crypto | 4-5 days | High | 📋 Planned |
 
 **Chess Launch:** 16-25 days (3-5 weeks)  
 **Multi-Game Platform:** +10-14 days (~2 weeks more)
