@@ -12,6 +12,7 @@ export class AIManager {
     this.engine = null;
     this.coachAI = null;
     this.enabled = false;
+    this.vsComputerActive = false; // Track if vs computer game is active
     this.aiColor = 'black'; // AI plays black by default
     this.skillLevel = 10; // Medium difficulty
     this.thinking = false;
@@ -49,6 +50,7 @@ export class AIManager {
     if (!initialized) return false;
     
     this.enabled = true;
+    this.vsComputerActive = true;
     this.aiColor = aiColor;
     this.skillLevel = skillLevel;
     this.moveHistory = [];
@@ -72,10 +74,18 @@ export class AIManager {
   }
   
   /**
+   * Start AI game (alias for startVsComputer)
+   */
+  async startAIGame(aiColor = 'black', skillLevel = 10) {
+    return this.startVsComputer(aiColor, skillLevel);
+  }
+
+  /**
    * Stop playing vs computer
    */
   stopVsComputer() {
     this.enabled = false;
+    this.vsComputerActive = false;
     this.thinking = false;
     this.moveHistory = [];
     this.hideThinkingIndicator();
@@ -85,11 +95,23 @@ export class AIManager {
    * Check if it's AI's turn
    */
   isAITurn() {
-    if (!this.enabled) return false;
+    if (!this.enabled) {
+      console.log('AI not enabled');
+      return false;
+    }
     
     const currentTurn = this.app.engine.getCurrentTurn();
-    return (currentTurn === 'white' && this.aiColor === 'white') ||
-           (currentTurn === 'black' && this.aiColor === 'black');
+    const isTurn = (currentTurn === 'white' && this.aiColor === 'white') ||
+                   (currentTurn === 'black' && this.aiColor === 'black');
+    
+    console.log('AI turn check:', {
+      enabled: this.enabled,
+      currentTurn,
+      aiColor: this.aiColor,
+      isTurn
+    });
+    
+    return isTurn;
   }
   
   /**

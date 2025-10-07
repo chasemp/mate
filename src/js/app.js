@@ -282,10 +282,20 @@ class ChessApp {
       this.animateMove(fromRow, fromCol, toRow, toCol, movingPiece, capturedPiece);
       
       // Trigger AI move if it's AI's turn
+      console.log('Checking AI turn...', {
+        enabled: this.aiManager.enabled,
+        currentTurn: this.engine.getCurrentTurn(),
+        aiColor: this.aiManager.aiColor,
+        isAITurn: this.aiManager.isAITurn()
+      });
+      
       if (this.aiManager.isAITurn()) {
+        console.log('AI turn detected, triggering move...');
         setTimeout(() => {
           this.aiManager.makeAIMove();
         }, 1000); // Wait 1 second after player move
+      } else {
+        console.log('Not AI turn, skipping...');
       }
       
     } else {
