@@ -665,8 +665,15 @@ class ChessApp {
    */
   updateGameInfo() {
     const turn = this.engine.getCurrentTurn();
-    document.getElementById('current-turn').textContent = 
-      `${turn.charAt(0).toUpperCase() + turn.slice(1)} to move`;
+    const turnText = `${turn.charAt(0).toUpperCase() + turn.slice(1)} to move`;
+    document.getElementById('current-turn').textContent = turnText;
+    
+    // Update header turn indicator
+    document.getElementById('header-turn-text').textContent = turnText;
+    
+    // Update header turn piece
+    const turnPiece = turn === 'white' ? '♔' : '♚';
+    document.getElementById('header-turn-piece').textContent = turnPiece;
     
     // Update move history
     const history = this.engine.getMoveHistory();
