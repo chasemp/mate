@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8b7355">
+    <meta name="description" content="Mate Settings - Customize your chess experience">
+    
+    <title>Settings - Mate</title>
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .settings-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .settings-section h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .theme-option {
+            background: #f5f5f5;
+            border: 3px solid transparent;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .theme-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .theme-option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+        
+        .theme-option h3 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .theme-option p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .theme-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            overflow: hidden;
+        }
+        
+        .preview-square {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .piece-preview {
+            width: 100%;
+            height: 80px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: linear-gradient(45deg, #f0d9b5 25%, #b58863 25%, #b58863 50%, #f0d9b5 50%, #f0d9b5 75%, #b58863 75%);
+            background-size: 40px 40px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .back-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-bar {
+            background: #8b7355;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            margin: -20px -20px 20px -20px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .header-bar h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .setting-item {
+            margin-bottom: 20px;
+        }
+        
+        .setting-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .setting-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .setting-select:hover {
+            border-color: #4CAF50;
+        }
+        
+        .setting-select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        .setting-description {
+            margin: 8px 0 0 0;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* App Management Section */
+        .app-management-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .pwa-install-button {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pwa-install-button:hover {
+            background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.35);
+        }
+        
+        .pwa-install-button:active {
+            transform: translateY(0);
+        }
+        
+        .pwa-install-button.installed {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        }
+        
+        .pwa-install-button.installed:hover {
+            background: linear-gradient(135deg, #5a6268 0%, #545b62 100%);
+        }
+        
+        .pwa-install-button.installed .install-text {
+            display: none;
+        }
+        
+        .pwa-install-button.installed .install-status::before {
+            content: "✓ ";
+            margin-right: 0.25rem;
+        }
+        
+        .install-text {
+            font-weight: 600;
+        }
+        
+        .install-status {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .reset-stats-button {
+            background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+            color: white;
+            border: 1px solid #d4491f;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reset-stats-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .reset-stats-button:hover::before {
+            left: 100%;
+        }
+        
+        .reset-stats-button:hover {
+            background: linear-gradient(135deg, #e55a2b 0%, #cc4a1f 100%);
+            border-color: #b8401a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .reset-stats-button:active {
+            transform: translateY(0);
+        }
+        
+        .reset-text {
+            font-weight: 600;
+        }
+        
+        .clear-cache-button {
+            background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+            color: white;
+            border: 1px solid #6a1b9a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .clear-cache-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .clear-cache-button:hover::before {
+            left: 100%;
+        }
+        
+        .clear-cache-button:hover {
+            background: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%);
+            border-color: #4a148c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+        
+        .clear-cache-button:active {
+            transform: translateY(0);
+        }
+        
+        .clear-cache-text {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Back Button -->
+    <div style="position: sticky; top: 0; z-index: 1000; background: #8b7355; padding: 12px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+        <a href="/index.html" style="color: white; text-decoration: none; font-weight: 600; font-size: 16px;">← Back to Game</a>
+    </div>
+    
+    <div class="settings-container">
+        <div class="settings-section">
+            <div class="header-bar">
+                <h1>⚙️ Mate Settings</h1>
+            </div>
+            
+            <section class="settings-section">
+                <h2>🎨 Board Theme</h2>
+                <p>Choose your favorite board colors</p>
+                <div id="board-themes" class="theme-grid"></div>
+            </section>
+            
+            <section class="settings-section">
+                <h2>♟️ Piece Set</h2>
+                <p>Select your preferred piece style</p>
+                <div id="piece-sets" class="theme-grid"></div>
+            </section>
+            
+            <section class="settings-section">
+                <h2>🎮 Gameplay</h2>
+                
+                <div class="setting-item">
+                    <label for="board-orientation-select">Board Orientation</label>
+                    <select id="board-orientation-select" class="setting-select">
+                        <option value="bottom">Play from Bottom (White on bottom)</option>
+                        <option value="top">Play from Top (Black on bottom)</option>
+                    </select>
+                    <p class="setting-description">Choose which side of the board you play from. This applies to all games and lets you customize your view regardless of which color you're playing.</p>
+                </div>
+                
+                <div class="setting-item">
+                    <label for="show-hints-toggle">
+                        <input type="checkbox" id="show-hints-toggle" style="margin-right: 8px; width: auto; cursor: pointer;">
+                        Show Move Hints
+                    </label>
+                    <p class="setting-description">Highlight possible moves when you select a piece. Great for learning! Works in all game modes.</p>
+                </div>
+            </section>
+            
+            <section class="settings-section">
+                <h2>📱 App Management</h2>
+                <p class="setting-description" style="margin-bottom: 1.5rem;">Manage your Mate app installation and data.</p>
+                
+                <div class="app-management-buttons">
+                    <!-- PWA Install Button -->
+                    <div class="setting-item pwa-install-item">
+                        <button id="pwa-install-button" class="pwa-install-button">
+                            <span class="install-text">📱 Install as PWA</span>
+                            <span class="install-status" id="install-status"></span>
+                        </button>
+                        <p class="setting-description">Install Mate on your home screen for a native app experience and offline play!</p>
+                    </div>
+                    
+                    <!-- Clear Saved Game Button -->
+                    <div class="setting-item reset-stats-item">
+                        <button id="clear-saved-game-button" class="reset-stats-button">
+                            <span class="reset-text">🗑️ Clear Saved Game</span>
+                        </button>
+                        <p class="setting-description">Remove your currently saved game. This won't affect game history or settings.</p>
+                    </div>
+                    
+                    <!-- Clear Cache Button -->
+                    <div class="setting-item clear-cache-item">
+                        <button id="clear-cache-button" class="clear-cache-button">
+                            <span class="clear-cache-text">🧹 Clear Cache & Reset SW</span>
+                        </button>
+                        <p class="setting-description">Clears service worker caches and unregisters service workers. Useful for development or when experiencing issues.</p>
+                    </div>
+                    
+                    <!-- Version Info -->
+                    <div class="setting-item" style="text-align: center; margin-top: 1rem;">
+                        <p id="version-display" style="font-size: 0.85rem; color: #666; margin: 0;">Loading version...</p>
+                        <p id="build-info" style="font-size: 0.75rem; color: #999; margin: 4px 0 0 0;">Build: Loading...</p>
+                    </div>
+                </div>
+            </section>
+            
+            <div style="text-align: center; margin-top: 24px;">
+                <a href="/index.html" class="back-button">← Back to Game</a>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="/js/settings-app.js"></script>
+    <script type="module" src="/js/pwa/pwa-manager.js"></script>
+</body>
+</html>
+

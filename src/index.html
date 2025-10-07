@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chess - Offline Multiplayer</title>
+    <meta name="description" content="Play chess offline with SMS-based game sharing">
+    <meta name="theme-color" content="#769656">
+    
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self'; 
+                   style-src 'self' 'unsafe-inline'; 
+                   img-src 'self' data:; 
+                   connect-src 'self';">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/x-icon" href="/icons/icon-192x192.png">
+    
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Chess">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>♟️ Chess</h1>
+            <div class="controls">
+                <button id="settings-btn" class="btn-secondary" title="Settings">⚙️</button>
+                <button id="share-btn" class="btn-primary" title="Share move">Share</button>
+            </div>
+        </header>
+        
+        <main class="main">
+            <div class="game-info">
+                <div class="turn-indicator">
+                    <span id="current-turn">White to move</span>
+                </div>
+                <div class="game-status" id="game-status"></div>
+                <div id="opponent-message" class="opponent-message-container"></div>
+            </div>
+            
+            <div class="board-container">
+                <canvas id="chess-board" width="600" height="600"></canvas>
+            </div>
+            
+            <div class="move-history">
+                <h3>Moves</h3>
+                <div id="move-history"></div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <a href="/new-game.html" id="new-game-btn" class="btn-secondary" style="text-decoration: none; display: inline-block; text-align: center;">New Game</a>
+            <button id="replay-btn" class="btn-secondary">🎬 Replay</button>
+            <button id="undo-btn" class="btn-secondary">Undo</button>
+        </footer>
+    </div>
+    
+        <!-- Promotion Modal (keep this one - it's needed during gameplay) -->
+        <div id="promotion-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Promote Pawn</h2>
+                <p>Choose a piece to promote your pawn to:</p>
+                <div class="promotion-choices">
+                    <button class="promotion-btn" data-piece="Q">
+                        <span class="piece-symbol">♕</span>
+                        <span>Queen</span>
+                    </button>
+                    <button class="promotion-btn" data-piece="R">
+                        <span class="piece-symbol">♖</span>
+                        <span>Rook</span>
+                    </button>
+                    <button class="promotion-btn" data-piece="B">
+                        <span class="piece-symbol">♗</span>
+                        <span>Bishop</span>
+                    </button>
+                    <button class="promotion-btn" data-piece="N">
+                        <span class="piece-symbol">♘</span>
+                        <span>Knight</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    
+    <!-- Replay Controls -->
+    <div id="replay-controls" class="replay-controls" style="display: none;">
+        <div class="replay-info">
+            <span id="replay-position">Move 0 of 0</span>
+            <span id="current-move-display">Starting position</span>
+        </div>
+        <div class="replay-buttons">
+            <button id="replay-start" class="btn-replay" title="Jump to start (Home)" aria-label="Jump to start">⏮️</button>
+            <button id="replay-prev" class="btn-replay" title="Previous move (←)" aria-label="Previous move">◀️</button>
+            <button id="replay-play" class="btn-replay" title="Auto-play (Space)" aria-label="Auto-play">▶️</button>
+            <button id="replay-pause" class="btn-replay" title="Pause (Space)" aria-label="Pause" style="display: none;">⏸️</button>
+            <button id="replay-next" class="btn-replay" title="Next move (→)" aria-label="Next move">▶️</button>
+            <button id="replay-end" class="btn-replay" title="Jump to current (End)" aria-label="Jump to end">⏭️</button>
+        </div>
+        <button id="replay-exit" class="btn-secondary">Exit Replay (Esc)</button>
+    </div>
+    
+    <script type="module" src="/js/app.js"></script>
+</body>
+</html>
+

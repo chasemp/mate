@@ -1,0 +1,44 @@
+{
+  "name": "chess-pwa",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Offline multiplayer chess PWA with SMS-based game sharing",
+  "main": "src/index.html",
+  "scripts": {
+    "dev": "vite",
+    "start": "echo 'Chess PWA will be available at: http://localhost:3458' && npm run dev",
+    "prebuild": "node scripts/generate-build-info.js",
+    "build": "vite build",
+    "postbuild": "node scripts/generate-build-info.js",
+    "preview": "vite preview",
+    "deploy": "npm run build && echo 'Commit and push docs/ to deploy to GitHub Pages'",
+    "port": "echo 'Chess PWA runs on port 3458 (see PORT_REGISTRY.md)'",
+    "port:check": "lsof -i :3458 || echo 'Port 3458 is free'",
+    "port:kill": "lsof -ti :3458 | xargs kill -9 2>/dev/null || echo 'No process on port 3458'",
+    "port:force": "npm run port:kill && npm run dev"
+  },
+  "keywords": [
+    "chess",
+    "pwa",
+    "progressive-web-app",
+    "offline",
+    "multiplayer",
+    "sms",
+    "board-game",
+    "vanilla-js"
+  ],
+  "author": "Chase Pettet",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.17.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chasemp/chess.git"
+  },
+  "homepage": "https://chess.523.life/",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

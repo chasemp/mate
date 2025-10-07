@@ -1,0 +1,282 @@
+/**
+ * Theme Manager
+ * Handles piece sets and board themes
+ * Inspired by Lichess's customization system
+ */
+
+export class ThemeManager {
+  constructor() {
+    this.currentPieceSet = 'classic';
+    this.currentBoardTheme = 'brown';
+    this.loadSettings();
+  }
+  
+  /**
+   * Available piece sets
+   */
+  getPieceSets() {
+    return {
+      classic: {
+        name: 'Classic',
+        description: 'Traditional chess pieces',
+        pieces: {
+          'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
+          'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
+        },
+        style: {
+          fontSize: 0.7,
+          whiteColor: '#ffffff',
+          whiteShadow: '#000000',
+          blackColor: '#000000',
+          blackShadow: '#ffffff',
+          strokeWidth: 2
+        }
+      },
+      
+      bold: {
+        name: 'Bold',
+        description: 'High contrast, easy to see',
+        pieces: {
+          'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
+          'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
+        },
+        style: {
+          fontSize: 0.75,
+          whiteColor: '#ffffff',
+          whiteShadow: '#333333',
+          blackColor: '#1a1a1a',
+          blackShadow: '#cccccc',
+          strokeWidth: 3
+        }
+      },
+      
+      modern: {
+        name: 'Modern',
+        description: 'Clean and minimal',
+        pieces: {
+          'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
+          'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
+        },
+        style: {
+          fontSize: 0.65,
+          whiteColor: '#f0f0f0',
+          whiteShadow: '#555555',
+          blackColor: '#2c2c2c',
+          blackShadow: '#d0d0d0',
+          strokeWidth: 1.5
+        }
+      },
+      
+      neon: {
+        name: 'Neon',
+        description: 'Futuristic glow effect',
+        pieces: {
+          'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
+          'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
+        },
+        style: {
+          fontSize: 0.7,
+          whiteColor: '#00ffff',
+          whiteShadow: '#0088ff',
+          blackColor: '#ff00ff',
+          blackShadow: '#8800ff',
+          strokeWidth: 2,
+          glow: true
+        }
+      },
+      
+      royal: {
+        name: 'Royal',
+        description: 'Elegant gold and silver',
+        pieces: {
+          'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
+          'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟'
+        },
+        style: {
+          fontSize: 0.72,
+          whiteColor: '#ffd700',
+          whiteShadow: '#b8860b',
+          blackColor: '#c0c0c0',
+          blackShadow: '#808080',
+          strokeWidth: 2.5
+        }
+      }
+    };
+  }
+  
+  /**
+   * Available board themes
+   */
+  getBoardThemes() {
+    return {
+      brown: {
+        name: 'Brown',
+        description: 'Classic wooden board',
+        light: '#f0d9b5',
+        dark: '#b58863',
+        selected: '#baca44',
+        legalMove: '#9dcc7a',
+        lastMove: '#cdd26a',
+        check: '#ff6b6b',
+        border: '#8b7355'
+      },
+      
+      blue: {
+        name: 'Blue Ocean',
+        description: 'Cool ocean colors',
+        light: '#dee3e6',
+        dark: '#8ca2ad',
+        selected: '#4f9fc8',
+        legalMove: '#7fc97f',
+        lastMove: '#7fc97f',
+        check: '#ff5555',
+        border: '#6688aa'
+      },
+      
+      green: {
+        name: 'Green Forest',
+        description: 'Natural green tones',
+        light: '#ffffdd',
+        dark: '#86a666',
+        selected: '#b8cc52',
+        legalMove: '#9dcc7a',
+        lastMove: '#aacc88',
+        check: '#ff6b6b',
+        border: '#5d7c44'
+      },
+      
+      purple: {
+        name: 'Purple Haze',
+        description: 'Royal purple theme',
+        light: '#e8d5ff',
+        dark: '#9f7ac0',
+        selected: '#c77dff',
+        legalMove: '#b19cd9',
+        lastMove: '#c77dff',
+        check: '#ff6b9d',
+        border: '#7b3aa3'
+      },
+      
+      marble: {
+        name: 'Marble',
+        description: 'Elegant marble pattern',
+        light: '#f7f7f7',
+        dark: '#b0b0b0',
+        selected: '#c9c9ff',
+        legalMove: '#b3e5b3',
+        lastMove: '#d4d4ff',
+        check: '#ffcccc',
+        border: '#999999'
+      },
+      
+      tournament: {
+        name: 'Tournament',
+        description: 'High contrast for serious play',
+        light: '#ffffff',
+        dark: '#6c757d',
+        selected: '#4a90e2',
+        legalMove: '#5cb85c',
+        lastMove: '#f0ad4e',
+        check: '#d9534f',
+        border: '#343a40'
+      },
+      
+      dark: {
+        name: 'Dark Mode',
+        description: 'Easy on the eyes',
+        light: '#3a3a3a',
+        dark: '#1e1e1e',
+        selected: '#4f9fc8',
+        legalMove: '#5c8c5c',
+        lastMove: '#6a7c4e',
+        check: '#cc4444',
+        border: '#111111'
+      },
+      
+      neon: {
+        name: 'Neon Nights',
+        description: 'Cyberpunk aesthetic',
+        light: '#1a1a2e',
+        dark: '#0f0f1e',
+        selected: '#00ffff',
+        legalMove: '#00ff88',
+        lastMove: '#ff00ff',
+        check: '#ff0055',
+        border: '#00ffff'
+      }
+    };
+  }
+  
+  /**
+   * Set piece set
+   */
+  setPieceSet(setId) {
+    if (!this.getPieceSets()[setId]) {
+      console.warn(`Invalid piece set: ${setId}`);
+      return false;
+    }
+    
+    this.currentPieceSet = setId;
+    this.saveSettings();
+    return true;
+  }
+  
+  /**
+   * Set board theme
+   */
+  setBoardTheme(themeId) {
+    if (!this.getBoardThemes()[themeId]) {
+      console.warn(`Invalid board theme: ${themeId}`);
+      return false;
+    }
+    
+    this.currentBoardTheme = themeId;
+    this.saveSettings();
+    return true;
+  }
+  
+  /**
+   * Get current piece set
+   */
+  getCurrentPieceSet() {
+    return this.getPieceSets()[this.currentPieceSet];
+  }
+  
+  /**
+   * Get current board theme
+   */
+  getCurrentBoardTheme() {
+    return this.getBoardThemes()[this.currentBoardTheme];
+  }
+  
+  /**
+   * Save settings to localStorage
+   */
+  saveSettings() {
+    const settings = {
+      pieceSet: this.currentPieceSet,
+      boardTheme: this.currentBoardTheme
+    };
+    
+    localStorage.setItem('chess-theme-settings', JSON.stringify(settings));
+    console.log('Theme settings saved:', settings);
+  }
+  
+  /**
+   * Load settings from localStorage
+   */
+  loadSettings() {
+    try {
+      const saved = localStorage.getItem('chess-theme-settings');
+      if (saved) {
+        const settings = JSON.parse(saved);
+        this.currentPieceSet = settings.pieceSet || 'classic';
+        this.currentBoardTheme = settings.boardTheme || 'brown';
+        console.log('Theme settings loaded:', settings);
+      }
+    } catch (error) {
+      console.error('Failed to load theme settings:', error);
+    }
+  }
+}
+
