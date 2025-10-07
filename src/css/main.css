@@ -725,6 +725,43 @@ button:disabled {
     transform: scale(0.95);
     transition: transform 0.1s ease;
   }
+  
+  /* Improve touch targets for all interactive elements */
+  a, button, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Better touch feedback for all buttons */
+  button:active, a:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+  
+  /* Ensure modal buttons are touch-friendly */
+  .modal-content button {
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Promotion modal touch improvements */
+  .promotion-btn {
+    min-height: 60px;
+    min-width: 60px;
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  /* Replay controls touch improvements */
+  .btn-replay {
+    min-height: 48px;
+    min-width: 48px;
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {

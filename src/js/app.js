@@ -95,37 +95,43 @@ class ChessApp {
       this.handleBoardClick(e.touches[0]);
     }, { passive: false });
     
+    // Add touchend for better mobile support
+    this.canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      if (e.changedTouches.length > 0) {
+        this.handleBoardClick(e.changedTouches[0]);
+      }
+    }, { passive: false });
+    
     // Learn to Play button
-    document.getElementById('learn-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('learn-btn', () => {
       this.learnMode.start();
     });
     
     // Coach Mode button
-    document.getElementById('coach-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('coach-btn', () => {
       this.toggleCoachMode();
     });
     
-        // Share button
-        document.getElementById('share-btn')?.addEventListener('click', () => {
-          this.shareManager.shareGame();
-        });
+    // Share button
+    this.addTouchEvents('share-btn', () => {
+      this.shareManager.shareGame();
+    });
     
     // Game selection button
-    document.getElementById('game-select-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('game-select-btn', () => {
       this.showGameSelection();
     });
     
     // Settings button
-    document.getElementById('settings-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('settings-btn', () => {
       // Save game state before navigating
       this.saveGameState();
       window.location.href = '/settings.html';
     });
     
-        // Replay button - handled by ReplayManager
-    
     // Undo button
-    document.getElementById('undo-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('undo-btn', () => {
       if (this.engine.undoMove()) {
         this.selectedSquare = null;
         this.legalMoves = [];
@@ -133,6 +139,38 @@ class ChessApp {
         this.showNotification('Move undone');
       }
     });
+    
+    // New Game button (link)
+    this.addTouchEvents('new-game-btn', () => {
+      // Link navigation will handle this
+    });
+    
+    // Stats button (link)
+    this.addTouchEvents('stats-btn', () => {
+      // Link navigation will handle this
+    });
+  }
+  
+  /**
+   * Add both click and touch events for mobile compatibility
+   */
+  addTouchEvents(elementId, handler) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    // Add click event
+    element.addEventListener('click', handler);
+    
+    // Add touch events for mobile
+    element.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handler();
+    }, { passive: false });
+    
+    element.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      // Prevent double-firing by only handling touchend
+    }, { passive: false });
   }
   
   /**
@@ -409,14 +447,33 @@ class ChessApp {
     const modal = document.getElementById('promotion-modal');
     modal.style.display = 'flex';
     
-    // Handle promotion choice
+    // Handle promotion choice with touch support
     const buttons = modal.querySelectorAll('.promotion-btn');
     buttons.forEach(btn => {
-      btn.onclick = () => {
+      // Remove existing listeners
+      btn.onclick = null;
+      btn.removeEventListener('click', btn._promotionHandler);
+      btn.removeEventListener('touchstart', btn._promotionTouchHandler);
+      
+      // Create handlers
+      const clickHandler = () => {
         const piece = btn.dataset.piece;
         this.handlePromotion(piece, fromRow, fromCol, toRow, toCol);
         modal.style.display = 'none';
       };
+      
+      const touchHandler = (e) => {
+        e.preventDefault();
+        clickHandler();
+      };
+      
+      // Store handlers for cleanup
+      btn._promotionHandler = clickHandler;
+      btn._promotionTouchHandler = touchHandler;
+      
+      // Add both click and touch events
+      btn.addEventListener('click', clickHandler);
+      btn.addEventListener('touchstart', touchHandler, { passive: false });
     });
   }
   

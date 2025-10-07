@@ -27,7 +27,7 @@ export class ReplayManager {
    */
   setupEventListeners() {
     // Replay button
-    document.getElementById('replay-btn')?.addEventListener('click', () => {
+    this.addTouchEvents('replay-btn', () => {
       if (this.isReplaying) {
         this.exit();
       } else {
@@ -36,13 +36,13 @@ export class ReplayManager {
     });
     
     // Control buttons
-    document.getElementById('replay-start')?.addEventListener('click', () => this.jumpToStart());
-    document.getElementById('replay-prev')?.addEventListener('click', () => this.prevMove());
-    document.getElementById('replay-play')?.addEventListener('click', () => this.autoPlay());
-    document.getElementById('replay-pause')?.addEventListener('click', () => this.stopAutoPlay());
-    document.getElementById('replay-next')?.addEventListener('click', () => this.nextMove());
-    document.getElementById('replay-end')?.addEventListener('click', () => this.jumpToCurrent());
-    document.getElementById('replay-exit')?.addEventListener('click', () => this.exit());
+    this.addTouchEvents('replay-start', () => this.jumpToStart());
+    this.addTouchEvents('replay-prev', () => this.prevMove());
+    this.addTouchEvents('replay-play', () => this.autoPlay());
+    this.addTouchEvents('replay-pause', () => this.stopAutoPlay());
+    this.addTouchEvents('replay-next', () => this.nextMove());
+    this.addTouchEvents('replay-end', () => this.jumpToCurrent());
+    this.addTouchEvents('replay-exit', () => this.exit());
     
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -79,6 +79,28 @@ export class ReplayManager {
           break;
       }
     });
+  }
+  
+  /**
+   * Add both click and touch events for mobile compatibility
+   */
+  addTouchEvents(elementId, handler) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    // Add click event
+    element.addEventListener('click', handler);
+    
+    // Add touch events for mobile
+    element.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handler();
+    }, { passive: false });
+    
+    element.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      // Prevent double-firing by only handling touchend
+    }, { passive: false });
   }
   
   /**
