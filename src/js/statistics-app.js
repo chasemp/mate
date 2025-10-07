@@ -26,30 +26,54 @@ class StatisticsApp {
   setupEventListeners() {
     // Game type tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      this.addTouchEvents(btn, (e) => {
         const gameType = e.target.dataset.game;
         this.switchGameTab(gameType);
       });
     });
     
     // Export statistics
-    document.getElementById('export-stats-btn').addEventListener('click', () => {
+    this.addTouchEvents('export-stats-btn', () => {
       this.exportStatistics();
     });
     
     // Clear statistics
-    document.getElementById('clear-stats-btn').addEventListener('click', () => {
+    this.addTouchEvents('clear-stats-btn', () => {
       this.showClearConfirmation();
     });
     
     // Confirmation modal
-    document.getElementById('confirm-cancel').addEventListener('click', () => {
+    this.addTouchEvents('confirm-cancel', () => {
       this.hideModal();
     });
     
-    document.getElementById('confirm-ok').addEventListener('click', () => {
+    this.addTouchEvents('confirm-ok', () => {
       this.handleConfirmAction();
     });
+  }
+  
+  /**
+   * Add both click and touch events for mobile compatibility
+   */
+  addTouchEvents(element, handler) {
+    if (typeof element === 'string') {
+      element = document.getElementById(element);
+    }
+    if (!element) return;
+    
+    // Add click event
+    element.addEventListener('click', handler);
+    
+    // Add touch events for mobile
+    element.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handler(e);
+    }, { passive: false });
+    
+    element.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      // Prevent double-firing by only handling touchend
+    }, { passive: false });
   }
   
   loadStatistics() {
