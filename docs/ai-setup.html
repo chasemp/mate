@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#769656">
+    <title>Play vs AI - Mate</title>
+    <link rel="manifest" href="./manifest.json">
+    <style>
+        body {
+            background: var(--bg-dark);
+            color: var(--text-light);
+        }
+        
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--accent-green);
+        }
+        
+        .page-header p {
+            margin: 0;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .setup-section {
+            background: var(--bg-darker);
+            border: 2px solid #454442;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .setup-section h2 {
+            margin: 0 0 1.5rem 0;
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            text-align: center;
+        }
+        
+        .difficulty-control {
+            margin-bottom: 2rem;
+        }
+        
+        .difficulty-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .difficulty-slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--bg-dark);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .difficulty-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .difficulty-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .difficulty-display {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+        
+        .color-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .color-card {
+            background: var(--bg-dark);
+            border: 3px solid #454442;
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        
+        .color-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(118, 150, 86, 0.3);
+        }
+        
+        .color-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        
+        .color-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        @media (max-width: 600px) {
+            .page-container {
+                padding: 1rem;
+            }
+            
+            .setup-section {
+                padding: 1.5rem;
+            }
+            
+            .color-card {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            .color-icon {
+                font-size: 3rem;
+            }
+        }
+    </style>
+  <script type="module" crossorigin src="./assets/aiSetup-BJzIl5un.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/main-vhD-KP9M.js">
+  <link rel="stylesheet" crossorigin href="./assets/main-eZ2sb4_S.css">
+<link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <h1>🤖 Play vs Computer</h1>
+            <p>Configure your AI opponent</p>
+        </div>
+        
+        <div class="setup-section">
+            <h2>🎯 AI Difficulty</h2>
+            
+            <div class="difficulty-control">
+                <label class="difficulty-label">Choose AI strength:</label>
+                <input type="range" id="ai-skill-level" class="difficulty-slider" 
+                       min="0" max="20" value="10" step="1">
+                <div id="skill-level-display" class="difficulty-display">
+                    Intermediate (Level 10, ~1900 ELO)
+                </div>
+            </div>
+        </div>
+        
+        <div class="setup-section">
+            <h2>⚪⚫ Choose Your Color</h2>
+            <p style="text-align: center; color: #999; margin-bottom: 1.5rem;">
+                Select which color you want to play as
+            </p>
+            
+            <div class="color-selection">
+                <a href="#" class="color-card" id="play-as-white">
+                    <div class="color-icon">♔</div>
+                    <div class="color-label">Play as White</div>
+                </a>
+                
+                <a href="#" class="color-card" id="play-as-black">
+                    <div class="color-icon">♚</div>
+                    <div class="color-label">Play as Black</div>
+                </a>
+            </div>
+        </div>
+        
+        <a href="/new-game.html" class="back-link">← Back to Game Modes</a>
+    </div>
+    
+</body>
+</html>
+

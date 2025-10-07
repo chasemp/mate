@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="152" height="152" viewBox="0 0 152 152" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#769656;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a7a42;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="knight-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0f0f0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d0d0d0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="152" height="152" fill="#312e2b" rx="22.8"/>
+  
+  <!-- Speech bubble -->
+  <g>
+    <!-- Main bubble -->
+    <rect x="15.200000000000001" y="15.200000000000001" 
+          width="121.6" height="91.19999999999999" 
+          rx="18.24" 
+          fill="url(#bg-gradient)" 
+          stroke="#f0f0f0" 
+          stroke-width="3.04"/>
+    
+    <!-- Speech tail -->
+    <path d="M 45.6 106.39999999999999
+             L 33.44 136.8
+             L 63.84 106.39999999999999
+             Z"
+          fill="url(#bg-gradient)"
+          stroke="#f0f0f0"
+          stroke-width="3.04"
+          stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Knight chess piece (simplified) -->
+  <g transform="translate(39.52, 31.92)">
+    <!-- Knight silhouette -->
+    <path d="M 36.48 10.943999999999999
+             L 47.424 18.24
+             L 51.071999999999996 25.535999999999998
+             L 54.72 32.832
+             L 51.071999999999996 40.128
+             L 54.72 47.424
+             L 62.01599999999999 62.01599999999999
+             L 10.943999999999999 62.01599999999999
+             L 18.24 47.424
+             L 21.887999999999998 40.128
+             L 18.24 32.832
+             L 21.887999999999998 25.535999999999998
+             L 25.535999999999998 18.24
+             Z"
+          fill="url(#knight-gradient)"
+          stroke="#312e2b"
+          stroke-width="2.28"/>
+    
+    <!-- Knight eye -->
+    <circle cx="40.128" cy="25.535999999999998" 
+            r="2.9183999999999997" 
+            fill="#312e2b"/>
+    
+    <!-- Base -->
+    <rect x="7.295999999999999" y="62.01599999999999" 
+          width="58.367999999999995" height="7.295999999999999" 
+          rx="1.4591999999999998"
+          fill="url(#knight-gradient)"
+          stroke="#312e2b"
+          stroke-width="2.28"/>
+  </g>
+</svg>

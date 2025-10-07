@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#769656">
+    <title>New Game - Mate</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            background: var(--bg-dark);
+            color: var(--text-light);
+        }
+        
+        .page-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--accent-green);
+        }
+        
+        .page-header p {
+            margin: 0;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .game-modes {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .game-mode-card {
+            background: var(--bg-darker);
+            border: 3px solid #454442;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--text-light);
+        }
+        
+        .game-mode-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(118, 150, 86, 0.3);
+        }
+        
+        .mode-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .mode-description {
+            font-size: 1rem;
+            color: #999;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        @media (max-width: 600px) {
+            .page-container {
+                padding: 1rem;
+            }
+            
+            .game-mode-card {
+                padding: 1.5rem;
+            }
+            
+            .mode-icon {
+                font-size: 3rem;
+            }
+            
+            .mode-title {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <h1>🆕 New Game</h1>
+            <p>Choose your game mode</p>
+        </div>
+        
+        <div class="game-modes">
+            <a href="/index.html?mode=2player" class="game-mode-card" id="two-player-mode">
+                <div class="mode-icon">👥</div>
+                <div class="mode-title">Two Players</div>
+                <div class="mode-description">Play with a friend locally or via SMS</div>
+            </a>
+            
+            <a href="/ai-setup.html" class="game-mode-card">
+                <div class="mode-icon">🤖</div>
+                <div class="mode-title">vs Computer</div>
+                <div class="mode-description">Challenge the AI opponent</div>
+            </a>
+        </div>
+        
+        <a href="/index.html" class="back-link">← Back to Current Game</a>
+    </div>
+    
+    <script type="module">
+        // Handle 2-player mode click
+        document.getElementById('two-player-mode').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Generate new game ID
+            const gameId = Math.random().toString(36).substring(2, 6);
+            localStorage.setItem('mate-new-game', 'true');
+            localStorage.setItem('mate-current-game-id', gameId);
+            
+            window.location.href = '/index.html';
+        });
+    </script>
+</body>
+</html>
+
