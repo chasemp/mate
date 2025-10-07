@@ -44,7 +44,8 @@ export default defineConfig({
         splash: 'src/splash.html',
         settings: 'src/settings.html',
         newGame: 'src/new-game.html',
-        aiSetup: 'src/ai-setup.html'
+        aiSetup: 'src/ai-setup.html',
+        games: 'src/games.html'
       }
     }
   },

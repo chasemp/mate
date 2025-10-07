@@ -80,6 +80,9 @@ class ChessApp {
     // Check for shared game in URL
     this.loadGameFromUrl();
     
+    // Check for game selection from games page
+    this.checkForGameSelection();
+    
     // Restore saved game state (if any)
     this.restoreGameState();
     
@@ -120,7 +123,7 @@ class ChessApp {
     
     // Game selection button
     this.addTouchEvents('game-select-btn', () => {
-      this.showGameSelection();
+      window.location.href = '/games.html';
     });
     
     // Settings button
@@ -409,13 +412,16 @@ class ChessApp {
   }
   
   /**
-   * Show game selection modal
+   * Check for game selection from games page
    */
-  showGameSelection() {
-    const games = this.multiGameApp.getAvailableGames();
-    this.gameUIManager.showGameSelection(games, (gameId) => {
-      this.switchToGame(gameId);
-    });
+  checkForGameSelection() {
+    const selectedGame = localStorage.getItem('mate-selected-game');
+    if (selectedGame) {
+      // Clear the selection
+      localStorage.removeItem('mate-selected-game');
+      // Switch to the selected game
+      this.switchToGame(selectedGame);
+    }
   }
   
   /**
