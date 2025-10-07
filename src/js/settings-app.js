@@ -40,6 +40,13 @@ class SettingsApp {
       const saved = localStorage.getItem('mate-show-hints');
       checkbox.checked = saved === 'true' || saved === null; // Default to true
     }
+    
+    // Load sound setting
+    const soundCheckbox = document.getElementById('sound-enabled-toggle');
+    if (soundCheckbox) {
+      const soundSaved = localStorage.getItem('mate-sound-enabled');
+      soundCheckbox.checked = soundSaved === 'true' || soundSaved === null; // Default to true
+    }
   }
   
   /**
@@ -171,6 +178,13 @@ class SettingsApp {
       const enabled = e.target.checked;
       localStorage.setItem('mate-show-hints', enabled.toString());
       this.showNotification(`Move hints: ${enabled ? 'Enabled ✨' : 'Disabled'}`);
+    });
+    
+    // Sound effects toggle
+    document.getElementById('sound-enabled-toggle')?.addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      localStorage.setItem('mate-sound-enabled', enabled.toString());
+      this.showNotification(`Sound effects: ${enabled ? 'Enabled 🔊' : 'Disabled 🔇'}`);
     });
   }
   

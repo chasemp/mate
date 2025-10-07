@@ -10,6 +10,7 @@ import { LearnMode } from './tutorial/learn-mode.js';
 import { ReplayManager } from './ui/replay-manager.js';
 import { ShareManager } from './sharing/share-manager.js';
 import { URLDecoder } from './sharing/url-decoder.js';
+import { SoundManager } from './audio/sound-manager.js';
 
 console.log('♟️ Mate starting...');
 
@@ -27,6 +28,9 @@ class ChessApp {
     
     // Theme manager
     this.themeManager = new ThemeManager();
+    
+    // Sound manager
+    this.soundManager = new SoundManager();
     
     // AI manager (includes coach AI)
     this.aiManager = new AIManager(this);
@@ -158,6 +162,9 @@ class ChessApp {
     if (piece && piece[0] === currentTurn[0]) {
       this.selectedSquare = { row, col };
       
+      // Play select sound
+      this.soundManager.play('select');
+      
       // Reload hints preference (in case changed in settings)
       this.showHints = localStorage.getItem('mate-show-hints');
       this.showHints = this.showHints === null || this.showHints === 'true';
@@ -168,6 +175,7 @@ class ChessApp {
       // Visual feedback for no legal moves
       if (this.legalMoves.length === 0 && this.showHints) {
         this.flashSquare(row, col);
+        this.soundManager.play('illegal');
         this.showNotification('❌ No legal moves for this piece!');
       }
       
@@ -245,20 +253,33 @@ class ChessApp {
       // Save game state after successful move
       this.saveGameState();
       
-      // Check game status
+      // Check game status and play sounds
       const status = this.engine.getGameStatus();
+      const wasCapture = this.lastMove && this.lastMove.captured;
+      
       if (status === 'checkmate') {
         const winner = this.engine.getCurrentTurn() === 'white' ? 'Black' : 'White';
         this.showNotification(`Checkmate! ${winner} wins!`);
+        this.soundManager.play('checkmate');
         this.aiManager.stopVsComputer();
       } else if (status === 'check') {
         this.showNotification(`${this.engine.getCurrentTurn()} is in check!`);
+        this.soundManager.play('check');
       } else if (status === 'stalemate') {
         this.showNotification('Stalemate! Game is a draw.');
+        this.soundManager.play('move');
         this.aiManager.stopVsComputer();
+      } else {
+        // Normal move - play capture or move sound
+        if (wasCapture) {
+          this.soundManager.play('capture');
+        } else {
+          this.soundManager.play('move');
+        }
       }
     } else {
       console.log('Illegal move');
+      this.soundManager.play('illegal');
       this.selectedSquare = null;
       this.legalMoves = [];
       this.render();
