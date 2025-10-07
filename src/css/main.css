@@ -43,9 +43,16 @@ html, body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.mate-logo {
+  height: 40px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
 }
 
 .controls {
@@ -694,8 +701,9 @@ button:disabled {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header h1 {
-    font-size: 1.2rem;
+  .mate-logo {
+    height: 35px;
+    max-width: 150px;
   }
   
   button {
@@ -767,6 +775,11 @@ button:disabled {
 @media (max-width: 480px) {
   .header {
     padding: 0.75rem;
+  }
+  
+  .mate-logo {
+    height: 30px;
+    max-width: 120px;
   }
   
   .main {
