@@ -1,0 +1,1 @@
+import"./main-BEgrv53G.js";document.getElementById("two-player-mode").addEventListener("click",e=>{e.preventDefault();const t=Math.random().toString(36).substring(2,6);localStorage.setItem("mate-new-game","true"),localStorage.setItem("mate-current-game-id",t),window.location.href="/index.html"});

@@ -41,19 +41,24 @@ html, body {
   padding: 1rem;
   background-color: var(--bg-darker);
   box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  min-height: 80px;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  min-height: 60px;
 }
 
 .mate-logo {
-  height: 40px;
+  height: 50px;
   width: auto;
-  max-width: 200px;
+  max-width: 300px;
   object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .new-game-header-btn {
@@ -100,8 +105,9 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  flex: 1;
-  max-width: 200px;
+  flex: 0 0 auto;
+  max-width: 150px;
+  margin: 0 20px;
 }
 
 .turn-indicator-header #header-turn-text {
@@ -131,6 +137,7 @@ html, body {
 .controls {
   display: flex;
   gap: 0.5rem;
+  flex: 0 0 auto;
 }
 
 /* Main */
@@ -774,9 +781,18 @@ button:disabled {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .header {
+    min-height: 70px;
+    padding: 0.75rem;
+  }
+  
+  .logo-container {
+    min-height: 50px;
+  }
+  
   .mate-logo {
-    height: 35px;
-    max-width: 150px;
+    height: 45px;
+    max-width: 250px;
   }
   
   .new-game-header-btn {
@@ -879,11 +895,16 @@ button:disabled {
 @media (max-width: 480px) {
   .header {
     padding: 0.75rem;
+    min-height: 60px;
+  }
+  
+  .logo-container {
+    min-height: 40px;
   }
   
   .mate-logo {
-    height: 30px;
-    max-width: 120px;
+    height: 40px;
+    max-width: 200px;
   }
   
   .new-game-header-btn {
