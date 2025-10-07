@@ -101,9 +101,10 @@ export class ChessGameEngine extends BaseGameEngine {
   // ============================================================================
   
   async getAIMove(color, skillLevel) {
-    // This would integrate with the existing AI manager
-    // For now, return a placeholder
-    throw new Error('AI integration not yet implemented in new architecture');
+    // This method is called by the multi-game system
+    // The actual AI logic is handled by AIManager in the main app
+    // This is just a placeholder for the interface
+    return null;
   }
   
   isAISupported() {
