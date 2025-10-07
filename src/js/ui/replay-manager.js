@@ -336,6 +336,9 @@ export class ReplayManager {
       replayBtn.textContent = '✖️ Exit Replay';
       replayBtn.classList.add('active');
     }
+    
+    // Add class to body for responsive layout adjustments
+    document.body.classList.add('replay-active');
   }
   
   /**
@@ -352,6 +355,9 @@ export class ReplayManager {
       replayBtn.textContent = '🎬 Replay';
       replayBtn.classList.remove('active');
     }
+    
+    // Remove class from body for responsive layout adjustments
+    document.body.classList.remove('replay-active');
   }
   
   /**

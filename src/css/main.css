@@ -1072,9 +1072,9 @@ button:disabled {
 /* Replay Controls */
 .replay-controls {
   position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.95);
   padding: 1rem 1.5rem;
   border-radius: 16px;
@@ -1084,7 +1084,10 @@ button:disabled {
   z-index: 3000;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   border: 2px solid var(--accent-green);
-  min-width: 320px;
+  min-width: 280px;
+  max-width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .replay-info {
@@ -1165,12 +1168,72 @@ button:disabled {
 }
 
 /* Mobile Replay Controls */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .replay-controls {
-    bottom: 60px;
-    min-width: 90%;
-    max-width: 90%;
-    padding: 0.75rem 1rem;
+    position: fixed;
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    transform: none;
+    min-width: auto;
+    max-width: none;
+    max-height: 200px;
+    padding: 1rem;
+  }
+  
+  /* Adjust layout when replay is active */
+  body.replay-active .main {
+    padding-bottom: 240px;
+  }
+  
+  body.replay-active .board-container {
+    margin-bottom: 20px;
+  }
+  
+  .replay-buttons {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .btn-replay {
+    padding: 0.6rem 0.8rem;
+    font-size: 1.1rem;
+    min-width: 48px;
+    min-height: 48px;
+    flex: 1;
+    max-width: 60px;
+  }
+  
+  .replay-info {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .replay-info #replay-position {
+    font-size: 1rem;
+  }
+  
+  .replay-info #current-move-display {
+    font-size: 0.8rem;
+  }
+  
+  #replay-exit {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .replay-controls {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    padding: 0.75rem;
+    max-height: 180px;
   }
   
   .replay-buttons {
@@ -1180,8 +1243,9 @@ button:disabled {
   .btn-replay {
     padding: 0.5rem 0.6rem;
     font-size: 1rem;
-    min-width: 40px;
-    min-height: 40px;
+    min-width: 44px;
+    min-height: 44px;
+    max-width: 50px;
   }
   
   .replay-info {
