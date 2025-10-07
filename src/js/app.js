@@ -11,6 +11,10 @@ import { ReplayManager } from './ui/replay-manager.js';
 import { ShareManager } from './sharing/share-manager.js';
 import { URLDecoder } from './sharing/url-decoder.js';
 import { SoundManager } from './audio/sound-manager.js';
+import { AnimationManager } from './animation/animation-manager.js';
+import { HapticManager } from './mobile/haptic-manager.js';
+import { MultiGameApp } from './multi-game-app.js';
+import { GameUIManager } from './games/shared/game-ui-manager.js';
 
 console.log('♟️ Mate starting...');
 
@@ -31,6 +35,16 @@ class ChessApp {
     
     // Sound manager
     this.soundManager = new SoundManager();
+    
+    // Animation manager
+    this.animationManager = new AnimationManager(this.canvas, this.ctx, this.squareSize);
+    
+    // Haptic manager
+    this.hapticManager = new HapticManager();
+    
+    // Multi-game app
+    this.multiGameApp = new MultiGameApp();
+    this.gameUIManager = new GameUIManager();
     
     // AI manager (includes coach AI)
     this.aiManager = new AIManager(this);
@@ -91,6 +105,11 @@ class ChessApp {
         document.getElementById('share-btn')?.addEventListener('click', () => {
           this.shareManager.shareGame();
         });
+    
+    // Game selection button
+    document.getElementById('game-select-btn')?.addEventListener('click', () => {
+      this.showGameSelection();
+    });
     
     // Settings button
     document.getElementById('settings-btn')?.addEventListener('click', () => {
@@ -162,8 +181,9 @@ class ChessApp {
     if (piece && piece[0] === currentTurn[0]) {
       this.selectedSquare = { row, col };
       
-      // Play select sound
+      // Play select sound and haptic feedback
       this.soundManager.play('select');
+      this.hapticManager.select();
       
       // Reload hints preference (in case changed in settings)
       this.showHints = localStorage.getItem('mate-show-hints');
@@ -176,6 +196,7 @@ class ChessApp {
       if (this.legalMoves.length === 0 && this.showHints) {
         this.flashSquare(row, col);
         this.soundManager.play('illegal');
+        this.hapticManager.illegal();
         this.showNotification('❌ No legal moves for this piece!');
       }
       
@@ -216,6 +237,11 @@ class ChessApp {
       }
     }
     
+    // Check if there's a piece to capture
+    const board = this.engine.getBoard();
+    const capturedPiece = board.getPiece(toRow, toCol);
+    const movingPiece = board.getPiece(fromRow, fromCol);
+    
     const result = this.engine.makeMove(fromRow, fromCol, toRow, toCol, promotionPiece);
     
     if (result === 'promotion') {
@@ -247,42 +273,111 @@ class ChessApp {
       
       this.selectedSquare = null;
       this.legalMoves = [];
-      this.render();
-      this.updateGameInfo();
       
-      // Save game state after successful move
-      this.saveGameState();
+      // Animate the move
+      this.animateMove(fromRow, fromCol, toRow, toCol, movingPiece, capturedPiece);
       
-      // Check game status and play sounds
-      const status = this.engine.getGameStatus();
-      const wasCapture = this.lastMove && this.lastMove.captured;
-      
-      if (status === 'checkmate') {
-        const winner = this.engine.getCurrentTurn() === 'white' ? 'Black' : 'White';
-        this.showNotification(`Checkmate! ${winner} wins!`);
-        this.soundManager.play('checkmate');
-        this.aiManager.stopVsComputer();
-      } else if (status === 'check') {
-        this.showNotification(`${this.engine.getCurrentTurn()} is in check!`);
-        this.soundManager.play('check');
-      } else if (status === 'stalemate') {
-        this.showNotification('Stalemate! Game is a draw.');
-        this.soundManager.play('move');
-        this.aiManager.stopVsComputer();
-      } else {
-        // Normal move - play capture or move sound
-        if (wasCapture) {
-          this.soundManager.play('capture');
-        } else {
-          this.soundManager.play('move');
-        }
-      }
     } else {
       console.log('Illegal move');
       this.soundManager.play('illegal');
+      this.hapticManager.illegal();
       this.selectedSquare = null;
       this.legalMoves = [];
       this.render();
+    }
+  }
+  
+  /**
+   * Animate a move
+   */
+  animateMove(fromRow, fromCol, toRow, toCol, movingPiece, capturedPiece) {
+    // If there's a captured piece, animate its fade out first
+    if (capturedPiece) {
+      this.animationManager.animateCapture(toRow, toCol, capturedPiece, () => {
+        // After capture animation, animate the move
+        this.animationManager.animateMove(fromRow, fromCol, toRow, toCol, movingPiece, () => {
+          this.onMoveAnimationComplete(fromRow, fromCol, toRow, toCol, capturedPiece);
+        });
+      });
+    } else {
+      // Just animate the move
+      this.animationManager.animateMove(fromRow, fromCol, toRow, toCol, movingPiece, () => {
+        this.onMoveAnimationComplete(fromRow, fromCol, toRow, toCol, capturedPiece);
+      });
+    }
+  }
+  
+  /**
+   * Called when move animation completes
+   */
+  onMoveAnimationComplete(fromRow, fromCol, toRow, toCol, capturedPiece) {
+    // Update UI
+    this.render();
+    this.updateGameInfo();
+    
+    // Save game state
+    this.saveGameState();
+    
+    // Check game status and play sounds
+    const status = this.engine.getGameStatus();
+    const wasCapture = this.lastMove && this.lastMove.captured;
+    
+    if (status === 'checkmate') {
+      const winner = this.engine.getCurrentTurn() === 'white' ? 'Black' : 'White';
+      this.showNotification(`Checkmate! ${winner} wins!`);
+      this.soundManager.play('checkmate');
+      this.hapticManager.checkmate();
+      this.aiManager.stopVsComputer();
+    } else if (status === 'check') {
+      this.showNotification(`${this.engine.getCurrentTurn()} is in check!`);
+      this.soundManager.play('check');
+      this.hapticManager.check();
+    } else if (status === 'stalemate') {
+      this.showNotification('Stalemate! Game is a draw.');
+      this.soundManager.play('move');
+      this.hapticManager.move();
+      this.aiManager.stopVsComputer();
+    } else {
+      // Normal move - play capture or move sound
+      if (wasCapture) {
+        this.soundManager.play('capture');
+        this.hapticManager.capture();
+      } else {
+        this.soundManager.play('move');
+        this.hapticManager.move();
+      }
+    }
+  }
+  
+  /**
+   * Show game selection modal
+   */
+  showGameSelection() {
+    const games = this.multiGameApp.getAvailableGames();
+    this.gameUIManager.showGameSelection(games, (gameId) => {
+      this.switchToGame(gameId);
+    });
+  }
+  
+  /**
+   * Switch to a different game
+   * @param {string} gameId - Game identifier
+   */
+  switchToGame(gameId) {
+    if (this.multiGameApp.switchGame(gameId)) {
+      // Update UI
+      const gameInfo = this.multiGameApp.getCurrentGameInfo();
+      this.gameUIManager.init(gameId, gameInfo);
+      
+      // Start new game
+      this.multiGameApp.startNewGame();
+      
+      // Update game info display
+      this.updateGameInfo();
+      
+      this.showNotification(`Switched to ${gameInfo.name}! 🎮`);
+    } else {
+      this.showNotification('Failed to switch game. Please try again.');
     }
   }
   
@@ -507,6 +602,12 @@ class ChessApp {
   render() {
     this.drawBoard();
     this.drawPieces();
+    
+    // Render animations on top
+    this.animationManager.renderAnimations((piece, x, y, size) => {
+      this.drawPieceAt(piece, x, y, size);
+    });
+    
     this.updateGameInfo();
   }
   
@@ -636,6 +737,57 @@ class ChessApp {
     
     // Reset shadow
     this.ctx.shadowBlur = 0;
+  }
+  
+  /**
+   * Draw a single piece at specific coordinates
+   */
+  drawPieceAt(piece, x, y, size) {
+    const pieceSet = this.themeManager.getCurrentPieceSet();
+    const style = pieceSet.style;
+    
+    // Set font size based on piece size
+    const fontSize = size * style.fontSize;
+    this.ctx.font = `${fontSize}px Arial`;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    
+    // Apply glow effect if enabled
+    if (style.glow) {
+      this.ctx.shadowBlur = 8;
+    } else {
+      this.ctx.shadowBlur = 0;
+    }
+    
+    // Get piece symbol
+    const symbol = pieceSet.pieces[piece];
+    
+    // Styling based on piece color
+    const isBlackPiece = piece[0] === 'b';
+    
+    if (isBlackPiece) {
+      this.ctx.strokeStyle = style.blackShadow;
+      this.ctx.fillStyle = style.blackColor;
+      if (style.glow) this.ctx.shadowColor = style.blackColor;
+    } else {
+      this.ctx.strokeStyle = style.whiteShadow;
+      this.ctx.fillStyle = style.whiteColor;
+      if (style.glow) this.ctx.shadowColor = style.whiteColor;
+    }
+    
+    // Draw piece with stroke
+    this.ctx.lineWidth = 1;
+    this.ctx.strokeText(symbol, x, y);
+    this.ctx.fillText(symbol, x, y);
+  }
+  
+  /**
+   * Check if a piece is currently being animated
+   */
+  isPieceAnimating(row, col) {
+    // This is a simple check - in a more complex system, we'd track which pieces are animating
+    // For now, we'll let the animation manager handle this
+    return false;
   }
   
   /**

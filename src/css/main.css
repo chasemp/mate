@@ -229,10 +229,29 @@ button:disabled {
   button {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
+    min-height: 44px; /* iOS touch target minimum */
+    min-width: 44px;
   }
   
   .move-history {
     max-height: 80px;
+  }
+  
+  /* Prevent zoom on double-tap */
+  #chess-board {
+    touch-action: manipulation;
+  }
+  
+  /* Ensure proper touch targets */
+  .btn, .setting-item input[type="checkbox"], .setting-item select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better touch feedback */
+  .btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
   }
 }
 
@@ -752,3 +771,67 @@ button:disabled {
   }
 }
 
+
+
+/* Game Selection Modal */
+.game-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.game-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.game-card:hover {
+    border-color: #769656;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(118, 150, 86, 0.2);
+}
+
+.game-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.game-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.game-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.game-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.game-players, .game-ai {
+    background: #f5f5f5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.game-ai {
+    background: #e8f5e8;
+    color: #2d5a2d;
+}

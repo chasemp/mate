@@ -47,6 +47,13 @@ class SettingsApp {
       const soundSaved = localStorage.getItem('mate-sound-enabled');
       soundCheckbox.checked = soundSaved === 'true' || soundSaved === null; // Default to true
     }
+    
+    // Load haptic setting
+    const hapticCheckbox = document.getElementById('haptic-enabled-toggle');
+    if (hapticCheckbox) {
+      const hapticSaved = localStorage.getItem('mate-haptic-enabled');
+      hapticCheckbox.checked = hapticSaved === 'true' || hapticSaved === null; // Default to true
+    }
   }
   
   /**
@@ -171,6 +178,15 @@ class SettingsApp {
       const orientation = e.target.value;
       localStorage.setItem('mate-board-orientation', orientation);
       this.showNotification(`Board orientation: ${orientation === 'bottom' ? 'White on bottom' : 'Black on bottom'}`);
+      
+      // Animate board flip if we're in the main game
+      if (window.app && window.app.animationManager) {
+        window.app.animationManager.animateBoardFlip(() => {
+          // Update the main app's board orientation
+          window.app.boardOrientation = orientation;
+          window.app.render();
+        });
+      }
     });
     
     // Show hints toggle
@@ -185,6 +201,13 @@ class SettingsApp {
       const enabled = e.target.checked;
       localStorage.setItem('mate-sound-enabled', enabled.toString());
       this.showNotification(`Sound effects: ${enabled ? 'Enabled 🔊' : 'Disabled 🔇'}`);
+    });
+    
+    // Haptic feedback toggle
+    document.getElementById('haptic-enabled-toggle')?.addEventListener('change', (e) => {
+      const enabled = e.target.checked;
+      localStorage.setItem('mate-haptic-enabled', enabled.toString());
+      this.showNotification(`Haptic feedback: ${enabled ? 'Enabled 📳' : 'Disabled'}`);
     });
   }
   
