@@ -102,6 +102,348 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Statistics Page Styles */
+.stats-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-color-light);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.stats-section h2 {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-color-dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--bg-color-dark);
+    padding: 1.5rem 1rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+    font-weight: 500;
+}
+
+.stats-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.stat-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-color-dark);
+    border-radius: 8px;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: var(--text-color-light);
+}
+
+.detail-value {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Game Stats Tabs */
+.game-stats-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--bg-color-dark);
+    background: var(--bg-color-dark);
+    color: var(--text-color-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.tab-btn:hover {
+    background: var(--primary-color-light);
+    border-color: var(--primary-color);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.game-stats {
+    display: none;
+}
+
+.game-stats.active {
+    display: block;
+}
+
+/* Daily Chart */
+.daily-chart {
+    background: var(--bg-color-dark);
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+.daily-chart-bars {
+    display: flex;
+    align-items: end;
+    gap: 0.5rem;
+    height: 120px;
+    padding: 1rem 0;
+}
+
+.daily-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.bar-fill {
+    width: 100%;
+    background: linear-gradient(to top, var(--primary-color), var(--primary-color-light));
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.3s ease;
+}
+
+.bar-label {
+    position: absolute;
+    top: -25px;
+    font-weight: 600;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
+
+.bar-date {
+    position: absolute;
+    bottom: -25px;
+    font-size: 0.8rem;
+    color: var(--text-color-muted);
+    font-weight: 500;
+}
+
+/* Achievements */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.achievement-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-color-dark);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+}
+
+.achievement-card.unlocked {
+    opacity: 1;
+    border: 2px solid var(--primary-color);
+}
+
+.achievement-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.achievement-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-name {
+    font-weight: 600;
+    color: var(--text-color-light);
+    margin-bottom: 0.25rem;
+}
+
+.achievement-description {
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+
+/* Recent Games */
+.recent-games {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.recent-game-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-color-dark);
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.recent-game-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.game-icon {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+}
+
+.game-info {
+    flex: 1;
+}
+
+.game-type {
+    font-weight: 600;
+    color: var(--text-color-light);
+    margin-bottom: 0.25rem;
+}
+
+.game-mode {
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+    margin-bottom: 0.5rem;
+}
+
+.game-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-color-muted);
+}
+
+.game-result {
+    font-size: 1.5rem;
+}
+
+/* No Data States */
+.no-achievements,
+.no-games {
+    text-align: center;
+    color: var(--text-color-muted);
+    font-style: italic;
+    padding: 2rem;
+    background: var(--bg-color-dark);
+    border-radius: 10px;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: var(--bg-color-dark);
+    color: var(--text-color-light);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--bg-color-light);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-color-dark);
+}
+
+.modal-content p {
+    margin: 0 0 1.5rem 0;
+    color: var(--text-color-light);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.modal-actions button {
+    flex: 1;
+    max-width: 120px;
+}
+
 /* Board */
 .board-container {
   max-width: 600px;

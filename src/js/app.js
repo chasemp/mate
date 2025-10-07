@@ -15,6 +15,7 @@ import { AnimationManager } from './animation/animation-manager.js';
 import { HapticManager } from './mobile/haptic-manager.js';
 import { MultiGameApp } from './multi-game-app.js';
 import { GameUIManager } from './games/shared/game-ui-manager.js';
+import { GameStatistics } from './analytics/game-statistics.js';
 
 console.log('♟️ Mate starting...');
 
@@ -45,6 +46,9 @@ class ChessApp {
     // Multi-game app
     this.multiGameApp = new MultiGameApp();
     this.gameUIManager = new GameUIManager();
+    
+    // Game statistics
+    this.gameStats = new GameStatistics();
     
     // AI manager (includes coach AI)
     this.aiManager = new AIManager(this);

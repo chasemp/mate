@@ -7,6 +7,7 @@
 
 import { gameRegistry } from './games/game-registry.js';
 import { ChessGameEngine } from './games/chess/chess-game-engine.js';
+import { CheckersGameEngine } from './games/checkers/checkers-game-engine.js';
 
 export class MultiGameApp {
   constructor() {
@@ -36,6 +37,19 @@ export class MultiGameApp {
       aiSupported: true,
       difficultyLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
       isDefault: true
+    });
+    
+    // Register Checkers
+    gameRegistry.register('checkers', CheckersGameEngine, {
+      name: 'Checkers',
+      description: 'Classic strategy game where pieces capture by jumping over opponents',
+      icon: '🔴',
+      category: 'strategy',
+      minPlayers: 2,
+      maxPlayers: 2,
+      aiSupported: true,
+      difficultyLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      isDefault: false
     });
     
     console.log('[MultiGameApp] Game registry initialized with', gameRegistry.getGameCount(), 'games');

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Statistics - Mate</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Mate">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <a href="index.html" class="back-btn">← Back to Game</a>
+                <h1>📊 Statistics</h1>
+                <div class="header-actions">
+                    <button id="export-stats-btn" class="btn-icon" title="Export Statistics">📤</button>
+                    <button id="clear-stats-btn" class="btn-icon" title="Clear Statistics">🗑️</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overall Statistics -->
+            <section class="stats-section">
+                <h2>📈 Overall Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-games">0</div>
+                        <div class="stat-label">Total Games</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-time">0h 0m</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-moves">0</div>
+                        <div class="stat-label">Total Moves</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="win-rate">0%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Game Type Statistics -->
+            <section class="stats-section">
+                <h2>🎮 Game Statistics</h2>
+                <div class="game-stats-tabs">
+                    <button class="tab-btn active" data-game="chess">♟️ Chess</button>
+                    <button class="tab-btn" data-game="checkers">🔴 Checkers</button>
+                </div>
+                
+                <div class="game-stats-content">
+                    <div id="chess-stats" class="game-stats active">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="chess-games">0</div>
+                                <div class="stat-label">Games Played</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="chess-wins">0</div>
+                                <div class="stat-label">Wins</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="chess-losses">0</div>
+                                <div class="stat-label">Losses</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="chess-draws">0</div>
+                                <div class="stat-label">Draws</div>
+                            </div>
+                        </div>
+                        <div class="stats-details">
+                            <div class="stat-detail">
+                                <span class="detail-label">Win Rate:</span>
+                                <span class="detail-value" id="chess-win-rate">0%</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Average Game Time:</span>
+                                <span class="detail-value" id="chess-avg-time">0m 0s</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Average Moves:</span>
+                                <span class="detail-value" id="chess-avg-moves">0</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Current Streak:</span>
+                                <span class="detail-value" id="chess-streak">0</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Best Time:</span>
+                                <span class="detail-value" id="chess-best-time">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="checkers-stats" class="game-stats">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="checkers-games">0</div>
+                                <div class="stat-label">Games Played</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="checkers-wins">0</div>
+                                <div class="stat-label">Wins</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="checkers-losses">0</div>
+                                <div class="stat-label">Losses</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="checkers-draws">0</div>
+                                <div class="stat-label">Draws</div>
+                            </div>
+                        </div>
+                        <div class="stats-details">
+                            <div class="stat-detail">
+                                <span class="detail-label">Win Rate:</span>
+                                <span class="detail-value" id="checkers-win-rate">0%</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Average Game Time:</span>
+                                <span class="detail-value" id="checkers-avg-time">0m 0s</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Average Moves:</span>
+                                <span class="detail-value" id="checkers-avg-moves">0</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Current Streak:</span>
+                                <span class="detail-value" id="checkers-streak">0</span>
+                            </div>
+                            <div class="stat-detail">
+                                <span class="detail-label">Best Time:</span>
+                                <span class="detail-value" id="checkers-best-time">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Daily Statistics -->
+            <section class="stats-section">
+                <h2>📅 Daily Activity</h2>
+                <div class="daily-stats">
+                    <div class="daily-chart" id="daily-chart">
+                        <!-- Chart will be generated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements -->
+            <section class="stats-section">
+                <h2>🏆 Achievements</h2>
+                <div class="achievements-grid" id="achievements-grid">
+                    <!-- Achievements will be generated here -->
+                </div>
+            </section>
+
+            <!-- Recent Games -->
+            <section class="stats-section">
+                <h2>🎯 Recent Games</h2>
+                <div class="recent-games" id="recent-games">
+                    <!-- Recent games will be generated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="confirm-title">Confirm Action</h3>
+            <p id="confirm-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="confirm-cancel" class="btn-secondary">Cancel</button>
+                <button id="confirm-ok" class="btn-primary">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/statistics-app.js"></script>
+</body>
+</html>
