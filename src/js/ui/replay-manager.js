@@ -307,7 +307,21 @@ export class ReplayManager {
     const turnEl = document.getElementById('current-turn');
     if (turnEl) {
       const turn = current % 2 === 0 ? 'White' : 'Black';
-      turnEl.textContent = `${turn} to move`;
+      const turnText = `${turn} to move`;
+      turnEl.textContent = turnText;
+      
+      // Update header turn indicator
+      const headerTurnEl = document.getElementById('header-turn-text');
+      if (headerTurnEl) {
+        headerTurnEl.textContent = turnText;
+      }
+      
+      // Update header turn piece
+      const headerPieceEl = document.getElementById('header-turn-piece');
+      if (headerPieceEl) {
+        const turnPiece = turn === 'White' ? '♔' : '♚';
+        headerPieceEl.textContent = turnPiece;
+      }
     }
     
     // Enable/disable buttons
