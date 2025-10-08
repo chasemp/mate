@@ -110,6 +110,9 @@ class ChessApp {
     // Check for shared game in URL
     this.loadGameFromUrl();
     
+    // Check for shared move in URL
+    this.loadMoveFromUrl();
+    
     // Check for game selection from games page
     this.checkForGameSelection();
     
@@ -142,7 +145,7 @@ class ChessApp {
         // Share button
     this.addTouchEvents('share-btn', () => {
       if (this.gameMode === 'remote') {
-        this.shareGameInvite();
+        this.shareMove();
       } else {
           this.shareManager.shareGame();
       }
@@ -583,6 +586,284 @@ class ChessApp {
     // Encode game data as base64
     const encodedData = btoa(JSON.stringify(gameData));
     return `${baseUrl}/?invite=${encodedData}`;
+  }
+
+  /**
+   * Generate move sharing URL with embedded move data
+   */
+  generateMoveShareUrl(moveData) {
+    const baseUrl = window.location.origin;
+    const shareData = {
+      gameId: this.gameId,
+      gameName: this.currentGameName,
+      opponent: this.currentOpponent,
+      gameType: this.multiGameApp.getCurrentGameId(),
+      move: moveData,
+      boardState: this.engine.getBoardState ? this.engine.getBoardState() : null,
+      currentTurn: this.engine.getCurrentTurn ? this.engine.getCurrentTurn() : 'white',
+      moveCount: this.engine.getMoveCount ? this.engine.getMoveCount() : 0,
+      timestamp: new Date().toISOString()
+    };
+    
+    const encodedData = btoa(JSON.stringify(shareData));
+    return `${baseUrl}/?shared-move=${encodedData}`;
+  }
+
+  /**
+   * Share move via Web Share API or fallback
+   */
+  async shareMove(moveData = null) {
+    // Get the last move if no move data provided
+    if (!moveData) {
+      moveData = this.getLastMoveData();
+      if (!moveData) {
+        console.log('No move to share');
+        return false;
+      }
+    }
+    
+    const shareUrl = this.generateMoveShareUrl(moveData);
+    const shareText = this.generateMoveShareText(moveData);
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Chess Move - ${this.currentGameName}`,
+          text: shareText,
+          url: shareUrl
+        });
+        console.log('Move shared successfully via Web Share API');
+        return true;
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Error sharing move:', error);
+          this.fallbackShareMove(shareUrl, shareText);
+        }
+        return false;
+      }
+    } else {
+      this.fallbackShareMove(shareUrl, shareText);
+      return true;
+    }
+  }
+
+  /**
+   * Get last move data for sharing
+   */
+  getLastMoveData() {
+    if (this.engine.getLastMove) {
+      const lastMove = this.engine.getLastMove();
+      if (lastMove) {
+        return {
+          from: lastMove.from,
+          to: lastMove.to,
+          piece: lastMove.piece,
+          capture: lastMove.capture,
+          king: lastMove.king,
+          notation: lastMove.notation
+        };
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Generate human-readable move share text
+   */
+  generateMoveShareText(moveData) {
+    const gameType = this.multiGameApp.getCurrentGameId();
+    const gameTypeName = this.getGameTypeDisplayName(gameType);
+    const moveNotation = this.formatMoveNotation(moveData);
+    
+    return `🎮 ${gameTypeName} Move: ${moveNotation}\n\n` +
+           `Game: ${this.currentGameName}\n` +
+           `vs ${this.currentOpponent}\n\n` +
+           `Click the link to see the move and continue the game!`;
+  }
+
+  /**
+   * Get game type display name
+   */
+  getGameTypeDisplayName(gameType) {
+    const names = {
+      chess: 'Chess',
+      checkers: 'Checkers',
+      othello: 'Othello',
+      breakthrough: 'Breakthrough',
+      go: 'Go'
+    };
+    return names[gameType] || gameType;
+  }
+
+  /**
+   * Format move notation for display
+   */
+  formatMoveNotation(moveData) {
+    if (this.multiGameApp.getCurrentGameId() === 'chess') {
+      return this.formatChessMove(moveData);
+    } else if (this.multiGameApp.getCurrentGameId() === 'checkers') {
+      return this.formatCheckersMove(moveData);
+    }
+    return `${moveData.from} → ${moveData.to}`;
+  }
+
+  /**
+   * Format chess move notation
+   */
+  formatChessMove(moveData) {
+    // Basic chess notation - can be enhanced with proper algebraic notation
+    const piece = moveData.piece || '';
+    const from = moveData.from || '';
+    const to = moveData.to || '';
+    const capture = moveData.capture ? 'x' : '';
+    
+    return `${piece}${from}${capture}${to}`;
+  }
+
+  /**
+   * Format checkers move notation
+   */
+  formatCheckersMove(moveData) {
+    const from = moveData.from || '';
+    const to = moveData.to || '';
+    const king = moveData.king ? ' (King)' : '';
+    
+    return `${from} → ${to}${king}`;
+  }
+
+  /**
+   * Fallback sharing method (copy to clipboard)
+   */
+  fallbackShareMove(shareUrl, shareText) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`).then(() => {
+        this.showShareSuccess();
+      }).catch(() => {
+        this.showShareFallback(shareUrl, shareText);
+      });
+    } else {
+      this.showShareFallback(shareUrl, shareText);
+    }
+  }
+
+  /**
+   * Show share success message
+   */
+  showShareSuccess() {
+    const message = document.createElement('div');
+    message.className = 'share-success-message';
+    message.textContent = 'Move copied to clipboard! Share it via SMS, WhatsApp, etc.';
+    message.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #22c55e;
+      color: white;
+      padding: 1rem;
+      border-radius: 8px;
+      z-index: 10000;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    `;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+      document.body.removeChild(message);
+    }, 3000);
+  }
+
+  /**
+   * Show fallback share dialog
+   */
+  showShareFallback(shareUrl, shareText) {
+    const fullText = `${shareText}\n\n${shareUrl}`;
+    const textarea = document.createElement('textarea');
+    textarea.value = fullText;
+    textarea.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 500px;
+      height: 200px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-color-dark);
+      color: var(--text-color-light);
+      font-family: monospace;
+      font-size: 0.9rem;
+      z-index: 10000;
+      resize: vertical;
+    `;
+    
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
+    `;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.cssText = `
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    `;
+    
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy Text';
+    copyBtn.style.cssText = `
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    `;
+    
+    const container = document.createElement('div');
+    container.style.cssText = `
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    `;
+    
+    container.appendChild(textarea);
+    container.appendChild(closeBtn);
+    container.appendChild(copyBtn);
+    overlay.appendChild(container);
+    document.body.appendChild(overlay);
+    
+    textarea.select();
+    
+    closeBtn.onclick = () => {
+      document.body.removeChild(overlay);
+    };
+    
+    copyBtn.onclick = () => {
+      textarea.select();
+      document.execCommand('copy');
+      this.showShareSuccess();
+      document.body.removeChild(overlay);
+    };
   }
   
   /**
@@ -1580,6 +1861,173 @@ class ChessApp {
       console.error('Failed to load game from URL:', error);
       this.showNotification('❌ Failed to load game from link');
     }
+  }
+
+  /**
+   * Load shared move from URL parameters
+   */
+  loadMoveFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedMove = urlParams.get('shared-move');
+    
+    if (sharedMove) {
+      try {
+        const moveData = JSON.parse(atob(sharedMove));
+        console.log('Loading shared move:', moveData);
+        
+        // Set game properties
+        this.gameId = moveData.gameId;
+        this.currentGameName = moveData.gameName;
+        this.currentOpponent = moveData.opponent;
+        this.gameMode = 'remote';
+        
+        // Update UI
+        this.updateGameInfoDisplay();
+        
+        // Switch to correct game type
+        if (moveData.gameType && this.multiGameApp) {
+          this.multiGameApp.switchGame(moveData.gameType);
+          this.engine = this.multiGameApp.getCurrentGameEngine();
+        }
+        
+        // Restore board state if available
+        if (moveData.boardState && this.engine.restoreGameState) {
+          this.engine.restoreGameState(moveData.boardState);
+        }
+        
+        // Show move animation
+        this.showSharedMove(moveData.move);
+        
+        // Clear URL parameters
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+      } catch (error) {
+        console.error('Error loading shared move:', error);
+      }
+    }
+  }
+
+  /**
+   * Show shared move with animation
+   */
+  showSharedMove(moveData) {
+    if (!moveData) return;
+    
+    // Create move highlight
+    const moveHighlight = document.createElement('div');
+    moveHighlight.className = 'shared-move-highlight';
+    moveHighlight.style.cssText = `
+      position: absolute;
+      background: rgba(34, 197, 94, 0.3);
+      border: 2px solid #22c55e;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 1000;
+      animation: sharedMovePulse 2s ease-in-out;
+    `;
+    
+    // Add CSS animation
+    if (!document.getElementById('shared-move-styles')) {
+      const style = document.createElement('style');
+      style.id = 'shared-move-styles';
+      style.textContent = `
+        @keyframes sharedMovePulse {
+          0% { opacity: 0; transform: scale(0.8); }
+          50% { opacity: 1; transform: scale(1.1); }
+          100% { opacity: 0; transform: scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Position highlight over the move
+    const canvas = document.getElementById('chess-board');
+    const rect = canvas.getBoundingClientRect();
+    const squareSize = rect.width / 8;
+    
+    // Calculate position (this is simplified - would need proper square calculation)
+    const fromSquare = this.getSquarePosition(moveData.from);
+    const toSquare = this.getSquarePosition(moveData.to);
+    
+    if (fromSquare && toSquare) {
+      moveHighlight.style.left = `${rect.left + fromSquare.x * squareSize}px`;
+      moveHighlight.style.top = `${rect.top + fromSquare.y * squareSize}px`;
+      moveHighlight.style.width = `${squareSize}px`;
+      moveHighlight.style.height = `${squareSize}px`;
+      
+      document.body.appendChild(moveHighlight);
+      
+      // Remove after animation
+      setTimeout(() => {
+        if (document.body.contains(moveHighlight)) {
+          document.body.removeChild(moveHighlight);
+        }
+      }, 2000);
+    }
+    
+    // Show move notification
+    this.showMoveNotification(moveData);
+  }
+
+  /**
+   * Get square position for move highlighting
+   */
+  getSquarePosition(square) {
+    if (!square || square.length !== 2) return null;
+    
+    const col = square.charCodeAt(0) - 97; // a=0, b=1, etc.
+    const row = 8 - parseInt(square[1]); // 8=0, 7=1, etc.
+    
+    return { x: col, y: row };
+  }
+
+  /**
+   * Show move notification
+   */
+  showMoveNotification(moveData) {
+    const notification = document.createElement('div');
+    notification.className = 'move-notification';
+    notification.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span>🎮</span>
+        <span>Move received: ${this.formatMoveNotation(moveData)}</span>
+      </div>
+    `;
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary-color);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      z-index: 10000;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s ease-out;
+    `;
+    
+    // Add CSS animation
+    if (!document.getElementById('move-notification-styles')) {
+      const style = document.createElement('style');
+      style.id = 'move-notification-styles';
+      style.textContent = `
+        @keyframes slideDown {
+          from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+          to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification);
+      }
+    }, 3000);
   }
   
   /**
