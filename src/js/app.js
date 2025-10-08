@@ -175,15 +175,28 @@ class ChessApp {
       });
     }
     
-    // Edit game name button
+    // Edit game name button (header)
     this.addTouchEvents('edit-game-name-btn', () => {
       this.editGameName();
     });
     
-    // Opponent name click to select from contacts
+    // Edit game name button (main area)
+    this.addTouchEvents('edit-game-name-btn-main', () => {
+      this.editGameName();
+    });
+    
+    // Opponent name click to select from contacts (header)
     const opponentName = document.getElementById('opponent-name');
     if (opponentName) {
       opponentName.addEventListener('click', () => {
+        this.showOpponentSelector();
+      });
+    }
+    
+    // Opponent name click to select from contacts (main area)
+    const opponentNameMain = document.getElementById('opponent-name-main');
+    if (opponentNameMain) {
+      opponentNameMain.addEventListener('click', () => {
         this.showOpponentSelector();
       });
     }
@@ -279,22 +292,14 @@ class ChessApp {
    * Update game info display based on current mode
    */
   updateGameInfoDisplay() {
-    const gameNameDisplay = document.getElementById('game-name-display');
-    const opponentDisplay = document.getElementById('opponent-display');
-    const playerColors = document.getElementById('player-colors');
-    const gameNameText = document.getElementById('game-name-text');
-    const opponentName = document.getElementById('opponent-name');
-    const opponentNameWithColor = document.getElementById('opponent-name-with-color');
+    // Update main area elements
+    const gameNameTextMain = document.getElementById('game-name-text-main');
+    const opponentNameMain = document.getElementById('opponent-name-main');
+    const opponentNameWithColorMain = document.getElementById('opponent-name-with-color-main');
     
-    // Always show game info (both local and remote can have opponents)
-    gameNameDisplay.style.display = 'flex';
-    opponentDisplay.style.display = 'flex';
-    playerColors.style.display = 'flex';
-    
-    // Update content
-    gameNameText.textContent = this.currentGameName;
-    opponentName.textContent = this.currentOpponent;
-    opponentNameWithColor.textContent = this.currentOpponent;
+    if (gameNameTextMain) gameNameTextMain.textContent = this.currentGameName;
+    if (opponentNameMain) opponentNameMain.textContent = this.currentOpponent;
+    if (opponentNameWithColorMain) opponentNameWithColorMain.textContent = this.currentOpponent;
     
     // Update player colors based on current turn
     this.updatePlayerColors();
@@ -306,11 +311,17 @@ class ChessApp {
   updatePlayerColors() {
     const playerWhite = document.querySelector('.player-white');
     const playerBlack = document.querySelector('.player-black');
+    const opponentNameWithColorMain = document.getElementById('opponent-name-with-color-main');
     
     if (playerWhite && playerBlack) {
       // Current player is always white, opponent is always black
       playerWhite.textContent = '(W) You';
-      playerBlack.innerHTML = `(B) <span id="opponent-name-with-color">${this.currentOpponent}</span>`;
+      playerBlack.innerHTML = `(B) <span id="opponent-name-with-color-main">${this.currentOpponent}</span>`;
+    }
+    
+    // Update the main area opponent name with color
+    if (opponentNameWithColorMain) {
+      opponentNameWithColorMain.textContent = this.currentOpponent;
     }
   }
   
