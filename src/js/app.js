@@ -53,8 +53,6 @@ class ChessApp {
     this.currentOpponent = localStorage.getItem('mate-current-opponent') || this.generateOpponentName();
     this.gameId = this.generateGameId();
     this.playerColor = 'white'; // Current player is always white
-    this.moveCount = 0;
-    this.gameStartTime = Date.now();
     
     // Theme manager
     this.themeManager = new ThemeManager();
@@ -98,8 +96,6 @@ class ChessApp {
     // Initialize game mode selector
     this.initializeGameModeSelector();
     
-    // Start game timer
-    this.startGameTimer();
     
     // Check for new game from setup pages
     this.checkForNewGame();
@@ -300,57 +296,11 @@ class ChessApp {
     // Update main area elements
     const gameNameTextMain = document.getElementById('game-name-text-main');
     const opponentNameMain = document.getElementById('opponent-name-main');
-    const opponentNameWithColorMain = document.getElementById('opponent-name-with-color-main');
     
     if (gameNameTextMain) gameNameTextMain.textContent = this.currentGameName;
     if (opponentNameMain) opponentNameMain.textContent = this.currentOpponent;
-    if (opponentNameWithColorMain) opponentNameWithColorMain.textContent = this.currentOpponent;
-    
-    // Update player colors based on current turn
-    this.updatePlayerColors();
-    
-    // Update game stats
-    this.updateGameStats();
   }
   
-  /**
-   * Update game statistics display
-   */
-  updateGameStats() {
-    const moveCountEl = document.getElementById('move-count');
-    const gameTimeEl = document.getElementById('game-time');
-    
-    if (moveCountEl) {
-      moveCountEl.textContent = this.moveCount;
-    }
-    
-    if (gameTimeEl) {
-      const elapsed = Math.floor((Date.now() - this.gameStartTime) / 1000);
-      const minutes = Math.floor(elapsed / 60);
-      const seconds = elapsed % 60;
-      gameTimeEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
-  }
-  
-  /**
-   * Start the game timer
-   */
-  startGameTimer() {
-    // Update timer every second
-    this.gameTimer = setInterval(() => {
-      this.updateGameStats();
-    }, 1000);
-  }
-  
-  /**
-   * Stop the game timer
-   */
-  stopGameTimer() {
-    if (this.gameTimer) {
-      clearInterval(this.gameTimer);
-      this.gameTimer = null;
-    }
-  }
   
   /**
    * Update player color display
@@ -358,17 +308,11 @@ class ChessApp {
   updatePlayerColors() {
     const playerWhite = document.querySelector('.player-white');
     const playerBlack = document.querySelector('.player-black');
-    const opponentNameWithColorMain = document.getElementById('opponent-name-with-color-main');
     
     if (playerWhite && playerBlack) {
       // Current player is always white, opponent is always black
-      playerWhite.textContent = '(W) You';
-      playerBlack.innerHTML = `(B) <span id="opponent-name-with-color-main">${this.currentOpponent}</span>`;
-    }
-    
-    // Update the main area opponent name with color
-    if (opponentNameWithColorMain) {
-      opponentNameWithColorMain.textContent = this.currentOpponent;
+      playerWhite.textContent = '(W)';
+      playerBlack.textContent = '(B)';
     }
   }
   
@@ -738,7 +682,6 @@ class ChessApp {
       
       this.selectedSquare = null;
       this.legalMoves = [];
-      this.moveCount++;
       this.render();
       this.updateGameInfo();
     } else if (result) {
