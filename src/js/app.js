@@ -27,6 +27,15 @@ class ChessApp {
     this.ctx = this.canvas.getContext('2d');
     this.squareSize = this.canvas.width / 8;
     
+    // Multi-game app
+    this.multiGameApp = new MultiGameApp();
+    this.gameUIManager = new GameUIManager();
+    
+    // Initialize game registry if not already done
+    if (!this.multiGameApp.gameRegistry) {
+      this.multiGameApp.initializeGameRegistry();
+    }
+    
     // Game engine (via multi-game system)
     this.engine = this.multiGameApp.getCurrentGameEngine();
     if (!this.engine) {
@@ -47,15 +56,6 @@ class ChessApp {
     
     // Haptic manager
     this.hapticManager = new HapticManager();
-    
-    // Multi-game app
-    this.multiGameApp = new MultiGameApp();
-    this.gameUIManager = new GameUIManager();
-    
-    // Initialize game registry if not already done
-    if (!this.multiGameApp.gameRegistry) {
-      this.multiGameApp.initializeGameRegistry();
-    }
     
     // Game statistics
     this.gameStats = new GameStatistics();
