@@ -2,11 +2,11 @@
 
 ## Overview
 
-The Chess PWA now fully supports **all three special chess moves**:
+The Mate Chess PWA fully supports **all three special chess moves**:
 
-1. **Castling** - King and rook move together
-2. **En Passant** - Special pawn capture
-3. **Pawn Promotion** - Pawn reaches the opposite end
+1. **Castling** - King and rook move together ✅ **IMPLEMENTED**
+2. **En Passant** - Special pawn capture ✅ **IMPLEMENTED**  
+3. **Pawn Promotion** - Pawn reaches the opposite end ✅ **IMPLEMENTED**
 
 ---
 
