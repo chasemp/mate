@@ -1,6 +1,6 @@
-# Chess PWA - Quick Start Guide
+# Mate Chess PWA - Quick Start Guide
 
-Get up and running in 5 minutes! 🚀
+**Play chess with friends via SMS and WhatsApp!** Get up and running in 5 minutes! 🚀
 
 ## Prerequisites
 
@@ -25,6 +25,27 @@ npm run dev
 ```
 
 Open http://localhost:3458 in your browser. You should see the Mate Chess PWA with a fully functional chess game! 🎮
+
+## 🎮 How to Play
+
+### Local Play
+1. **Select** a piece (white moves first)
+2. **Move** to a highlighted square
+3. **Undo** moves with the ↩️ button
+4. **New Game** to start fresh
+
+### Remote Multiplayer (NEW!)
+1. **Set Game Mode** to "Remote" in the header dropdown
+2. **Name your game** and select an opponent
+3. **Make your move** and click "Share"
+4. **Send via SMS/WhatsApp** using the generated link
+5. **Opponent receives** the move and continues the game
+
+### Game Management
+- **👥 Competitors** - View all your ongoing games
+- **📱 Auto-save** - Games save automatically every 30 seconds
+- **🔄 Resume** - Continue any game from where you left off
+- **📊 Stats** - Track your game history and performance
 
 ## Development Workflow
 
@@ -52,35 +73,46 @@ npm run dev
 ## Current Status
 
 The Mate Chess PWA is fully functional with:
-- ✅ Complete chess engine with all moves
-- ✅ Multi-game system (Chess + Checkers)
-- ✅ AI opponent with 20 difficulty levels
-- ✅ Mobile-optimized ultra-compact layout
-- ✅ Game mode selector (Local vs Remote)
-- ✅ Theme system with 5 piece sets and 8 board themes
+- ✅ **Complete chess engine** with all moves and special moves
+- ✅ **Multi-game system** (Chess + Checkers, with Othello, Breakthrough, Go planned)
+- ✅ **AI opponent** with 20 difficulty levels
+- ✅ **Mobile-optimized** ultra-compact layout
+- ✅ **Remote multiplayer** via SMS/WhatsApp sharing
+- ✅ **Game management** with competitors page
+- ✅ **Auto-save** and game persistence
+- ✅ **Move sharing** with embedded game data
+- ✅ **Theme system** with 5 piece sets and 8 board themes
 
 ## Next Steps
 
 Follow the roadmap in `CHESS_PWA_ROADMAP.md` for upcoming features:
 
 ### Upcoming Features:
-- WebRTC real-time multiplayer
-- URL-based game sharing
-- Move replay system
-- Game history storage
-- Advanced AI features
+- **WebRTC real-time multiplayer** (peer-to-peer)
+- **QR code generation** for easy game invites
+- **Bluetooth fallback** for offline connections
+- **Move replay system** with step-by-step playback
+- **Tournament mode** with brackets and scoring
 
-## Current Features
+## 🎮 Multiplayer Features
 
-The Mate Chess PWA includes:
-- Complete chess engine with all special moves
-- Checkers game (fully functional)
-- AI opponent with 20 difficulty levels
-- Mobile-optimized ultra-compact layout
-- Game mode selector (Local vs Remote)
-- Theme system with 5 piece sets and 8 board themes
-- Coach mode and learn-to-play tutorial
-- Multi-game system architecture
+### Remote Play via SMS/WhatsApp
+- **One-click sharing** - Web Share API for native mobile sharing
+- **Move animations** - Visual feedback when receiving moves
+- **Auto-save** - Never lose your progress
+- **Game management** - Track all ongoing games
+- **Resume anywhere** - Continue games on any device
+
+### Game Types
+- **♟️ Chess** - Full rules with all special moves
+- **● Checkers** - Classic checkers with king promotion
+- **🔄 More coming** - Othello, Breakthrough, Go
+
+### Customization
+- **🎨 8 board themes** + **5 piece sets** - Mix and match styles
+- **📱 Mobile-optimized** - Ultra-compact layout for small screens
+- **🌙 Dark mode** - Easy on the eyes
+- **⚙️ Settings** - Customize your experience
 
 ## Verify Setup
 
@@ -96,6 +128,28 @@ npm run dev
 #    - Game controls and settings
 #    - Fully playable chess game!
 ```
+
+## 🧪 Testing Multiplayer Features
+
+### Test Remote Play
+1. **Set Game Mode** to "Remote" in the header dropdown
+2. **Name your game** (e.g., "Test Game")
+3. **Select an opponent** (or use contact picker on mobile)
+4. **Make a move** and click "Share"
+5. **Copy the link** and open in another browser tab
+6. **Verify** the move loads with animation
+
+### Test Game Management
+1. **Click the 👥 button** in the header to open Competitors page
+2. **View your games** - should show ongoing games
+3. **Click "Resume"** to continue any game
+4. **Test filtering** by game type and status
+
+### Test Auto-Save
+1. **Make several moves** in a game
+2. **Refresh the page** - game should restore
+3. **Check Competitors page** - game should appear there
+4. **Resume the game** - should continue from where you left off
 
 ## Building for Production
 
