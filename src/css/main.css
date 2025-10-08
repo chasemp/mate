@@ -173,28 +173,29 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1rem;
+  justify-content: flex-start;
+  padding: 0.5rem;
   overflow: auto;
 }
 
 .game-info {
   width: 100%;
   max-width: 600px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   text-align: center;
+  padding: 0.25rem;
 }
 
 .turn-indicator {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .game-status {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #ff9800;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .opponent-message-container {
@@ -564,7 +565,7 @@ html, body {
   max-height: 600px;
   width: 100%;
   aspect-ratio: 1;
-  margin: 0 auto;
+  margin: 0.25rem auto;
 }
 
 #chess-board {
@@ -967,16 +968,16 @@ button:disabled {
   
   .main {
     padding: 0.125rem;
-    gap: 0.25rem;
-    min-height: calc(100vh - 120px);
+    gap: 0.125rem;
+    min-height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
   }
   
   .game-info {
-    margin-bottom: 0.25rem;
-    padding: 0.25rem;
+    margin-bottom: 0.125rem;
+    padding: 0.125rem;
   }
   
   .turn-indicator {
@@ -990,7 +991,7 @@ button:disabled {
   }
   
   .board-container {
-    margin: 0.25rem auto;
+    margin: 0.125rem auto;
   }
   
   .footer {
