@@ -55,11 +55,11 @@ export class PieceRules {
         if (targetPiece && targetPiece[0] !== color) {
           moves.push({ row: newRow, col: newCol, type: 'capture' });
         }
-        // TODO: En passant (Phase 1.3)
+        // En passant is implemented in special-moves.js
       }
     }
     
-    // TODO: Pawn promotion (Phase 1.3)
+    // Pawn promotion is implemented in special-moves.js
     
     return moves;
   }
