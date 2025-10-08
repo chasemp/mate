@@ -312,91 +312,124 @@ html, body {
   padding: 0.125rem;
 }
 
-.game-info-horizontal {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem;
+.game-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1rem;
   background: var(--bg-color-dark);
   border-radius: 8px;
   border: 1px solid var(--border-color);
   margin-bottom: 0.5rem;
 }
 
+.game-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0; /* Allow columns to shrink */
+}
+
+.column-1 {
+  /* Game name and next move */
+}
+
+.column-2 {
+  /* Opponent info */
+}
+
+.column-3 {
+  /* Game stats */
+}
+
 .game-name-section {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 150px;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.next-move-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .opponent-section {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 120px;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .player-colors-section {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex: 1;
-  min-width: 150px;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.turn-section {
+.game-stats-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.5rem;
-  flex: 0 0 auto;
-  min-width: 120px;
 }
 
-.game-name-section .game-name-label,
-.opponent-section .opponent-label {
-  font-size: 0.8rem;
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.game-name-label,
+.next-move-label,
+.opponent-label,
+.stats-label {
+  font-size: 0.75rem;
   color: var(--text-color-muted);
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.game-name-section .game-name-text,
-.opponent-section .opponent-name {
-  font-size: 0.9rem;
+.game-name-text,
+.opponent-name {
+  font-size: 1rem;
   color: var(--text-color-light);
   font-weight: 600;
 }
 
-.player-colors-section .player-white {
+#current-turn {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color-light);
+}
+
+#current-turn-piece {
+  font-size: 1.2rem;
+  margin-left: 0.25rem;
+}
+
+.player-white {
   color: #f0f0f0;
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
-.player-colors-section .player-black {
+.player-black {
   color: #888;
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
-.player-colors-section .player-separator {
+.player-separator {
   color: var(--text-color-muted);
   font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.move-count,
+.game-time {
   font-size: 0.8rem;
-}
-
-.turn-section #current-turn {
-  font-size: 0.9rem;
-  font-weight: 600;
   color: var(--text-color-light);
-}
-
-.turn-section #current-turn-piece {
-  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 .turn-indicator {
@@ -1079,20 +1112,24 @@ button:disabled {
     gap: 0.2rem;
   }
   
-  .game-info-horizontal {
-    flex-direction: column;
+  .game-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .game-info-column {
     gap: 0.5rem;
-    padding: 0.5rem;
   }
   
   .game-name-section,
+  .next-move-section,
   .opponent-section,
   .player-colors-section,
-  .turn-section {
-    flex: none;
-    min-width: auto;
-    width: 100%;
-    justify-content: center;
+  .game-stats-section {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
   }
   
   .turn-indicator-header #header-turn-text {
@@ -2081,33 +2118,40 @@ button:disabled {
     gap: 0.15rem;
   }
   
-  .game-info-horizontal {
-    padding: 0.25rem;
-    gap: 0.25rem;
+  .game-info-grid {
+    padding: 0.5rem;
+    gap: 0.75rem;
   }
   
-  .game-name-section .game-name-label,
-  .opponent-section .opponent-label {
-    font-size: 0.7rem;
+  .game-name-label,
+  .next-move-label,
+  .opponent-label,
+  .stats-label {
+    font-size: 0.65rem;
   }
   
-  .game-name-section .game-name-text,
-  .opponent-section .opponent-name {
-    font-size: 0.8rem;
+  .game-name-text,
+  .opponent-name {
+    font-size: 0.85rem;
   }
   
-  .player-colors-section .player-white,
-  .player-colors-section .player-black,
-  .player-colors-section .player-separator {
-    font-size: 0.7rem;
+  #current-turn {
+    font-size: 0.85rem;
   }
   
-  .turn-section #current-turn {
-    font-size: 0.8rem;
-  }
-  
-  .turn-section #current-turn-piece {
+  #current-turn-piece {
     font-size: 1rem;
+  }
+  
+  .player-white,
+  .player-black,
+  .player-separator {
+    font-size: 0.75rem;
+  }
+  
+  .move-count,
+  .game-time {
+    font-size: 0.7rem;
   }
   
   .turn-indicator-header #header-turn-text {
