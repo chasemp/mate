@@ -45,6 +45,9 @@ class ChessApp {
     }
     this.engine.newGame();
     
+    // Game mode (Local vs Remote)
+    this.gameMode = localStorage.getItem('mate-game-mode') || 'local';
+    
     // Theme manager
     this.themeManager = new ThemeManager();
     
@@ -83,6 +86,9 @@ class ChessApp {
     this.showHints = this.showHints === null || this.showHints === 'true'; // Default to true
     
     this.setupEventListeners();
+    
+    // Initialize game mode selector
+    this.initializeGameModeSelector();
     
     // Check for new game from setup pages
     this.checkForNewGame();
@@ -151,6 +157,14 @@ class ChessApp {
       window.location.href = '/new-game.html';
     });
     
+    // Game mode selector
+    const gameModeSelect = document.getElementById('game-mode-select');
+    if (gameModeSelect) {
+      gameModeSelect.addEventListener('change', (e) => {
+        this.handleGameModeChange(e.target.value);
+      });
+    }
+    
     // Stats button (link) - let the href handle navigation
   }
   
@@ -174,6 +188,64 @@ class ChessApp {
       e.preventDefault();
       // Prevent double-firing by only handling touchend
     }, { passive: false });
+  }
+  
+  /**
+   * Handle game mode change (Local vs Remote)
+   */
+  handleGameModeChange(mode) {
+    console.log('Game mode changed to:', mode);
+    
+    // Store the selected mode
+    this.gameMode = mode;
+    localStorage.setItem('mate-game-mode', mode);
+    
+    if (mode === 'remote') {
+      this.initializeRemoteMode();
+    } else {
+      this.initializeLocalMode();
+    }
+    
+    this.showNotification(`Switched to ${mode} mode`);
+  }
+  
+  /**
+   * Initialize remote multiplayer mode
+   */
+  initializeRemoteMode() {
+    // TODO: Initialize remote multiplayer features
+    console.log('Initializing remote mode...');
+    
+    // For now, just show a placeholder
+    this.showNotification('Remote mode: Coming soon!');
+  }
+  
+  /**
+   * Initialize local multiplayer mode
+   */
+  initializeLocalMode() {
+    // TODO: Initialize local multiplayer features
+    console.log('Initializing local mode...');
+    
+    // For now, this is the default behavior
+  }
+  
+  /**
+   * Initialize game mode selector UI
+   */
+  initializeGameModeSelector() {
+    const gameModeSelect = document.getElementById('game-mode-select');
+    if (gameModeSelect) {
+      // Set the current mode
+      gameModeSelect.value = this.gameMode;
+      
+      // Initialize the appropriate mode
+      if (this.gameMode === 'remote') {
+        this.initializeRemoteMode();
+      } else {
+        this.initializeLocalMode();
+      }
+    }
   }
   
   /**

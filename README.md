@@ -87,18 +87,22 @@ See `CHESS_PWA_ROADMAP.md` for detailed development plan.
 - [x] Board rendering with themes
 - [x] Theme system (5 piece sets, 8 board themes)
 - [x] Move validation (check, checkmate, stalemate)
-- [ ] Special moves (castling, en passant, pawn promotion)
+- [x] Special moves (castling, en passant, pawn promotion)
+- [x] Multi-game system (Chess + Checkers)
+- [x] AI opponent with 20 difficulty levels
+- [x] Coach mode and learn-to-play tutorial
+- [x] Game mode selector (Local vs Remote)
+- [x] Mobile-optimized ultra-compact layout
+- [ ] WebRTC real-time multiplayer
 - [ ] URL-based game sharing
 - [ ] Move replay system
 - [ ] Game history storage
-- [ ] SMS-friendly URL shortening
 
 ## 📚 Documentation
 
 - [CHESS_PWA_ROADMAP.md](CHESS_PWA_ROADMAP.md) - Complete development roadmap
 - [THEME_GUIDE.md](THEME_GUIDE.md) - Visual theme guide
 - [QUICK_START.md](QUICK_START.md) - Development & deployment guide
-- [PORT_REGISTRY.md](PORT_REGISTRY.md) - Port assignment (3458)
 
 ## 🤝 Credits
 
