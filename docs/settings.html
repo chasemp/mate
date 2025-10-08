@@ -14,6 +14,12 @@
             max-width: 600px;
             margin: 20px auto;
             padding: 20px;
+            min-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+        
+        body {
+            overflow-y: auto !important;
         }
         
         .settings-section {
@@ -332,8 +338,35 @@
         .clear-cache-text {
             font-weight: 600;
         }
+        
+        /* Mobile scrolling fixes */
+        @media (max-width: 768px) {
+            .settings-container {
+                margin: 10px;
+                padding: 15px;
+                max-width: none;
+                min-height: calc(100vh - 20px);
+            }
+            
+            body {
+                overflow-y: auto !important;
+                height: auto !important;
+            }
+            
+            html {
+                overflow-y: auto !important;
+                height: auto !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .settings-container {
+                margin: 5px;
+                padding: 10px;
+            }
+        }
     </style>
-  <script type="module" crossorigin src="./assets/settings-BXh8ZYZ1.js"></script>
+  <script type="module" crossorigin src="./assets/settings-CC32oNeh.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/main-bAybvlw7.js">
   <link rel="modulepreload" crossorigin href="./assets/theme-manager-CdLvXRPk.js">
   <link rel="stylesheet" crossorigin href="./assets/main-B0HJ0qNp.css">
