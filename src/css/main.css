@@ -916,8 +916,8 @@ button:disabled {
 
 @media (max-width: 480px) {
   .header {
-    padding: 0.75rem;
-    min-height: 60px;
+    padding: 0.5rem;
+    min-height: 50px;
   }
   
   .logo-container {
@@ -960,7 +960,7 @@ button:disabled {
   .main {
     padding: 0;
     gap: 0;
-    min-height: calc(100vh - 60px);
+    min-height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1765,55 +1765,57 @@ button:disabled {
 /* Ultra-small mobile screens */
 @media (max-width: 360px) {
   .header {
-    padding: 0.5rem;
-    min-height: 50px;
+    padding: 0.25rem;
+    min-height: 35px;
+    position: relative;
   }
   
   .logo-container {
-    min-height: 35px;
+    min-height: 25px;
   }
   
   .mate-logo {
-    height: 35px;
-    max-width: 150px;
-  }
-  
-  .new-game-header-btn {
-    padding: 3px 6px;
-    font-size: 9px;
-    gap: 2px;
-  }
-  
-  .new-game-text {
-    font-size: 8px;
-  }
-  
-  .turn-indicator-header {
+    height: 25px;
     max-width: 100px;
   }
   
+  .new-game-header-btn {
+    padding: 2px 4px;
+    font-size: 8px;
+    gap: 1px;
+  }
+  
+  .new-game-text {
+    font-size: 7px;
+  }
+  
+  .turn-indicator-header {
+    max-width: 80px;
+  }
+  
   .turn-indicator-header #header-turn-text {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
   
   .turn-piece {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
   }
   
   .turn-piece #header-turn-piece {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   
   .main {
     padding: 0;
     gap: 0;
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 35px);
   }
   
   .game-info {
     margin-bottom: 0;
     padding: 0;
+    display: none; /* Hide game-info on ultra-small screens to save space */
   }
   
   .turn-indicator {
@@ -1827,7 +1829,8 @@ button:disabled {
   }
   
   .board-container {
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
   }
   
   .footer {
