@@ -26,11 +26,11 @@
     <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
     
     <!-- Styles -->
-  <script type="module" crossorigin src="./assets/main-DxVdfVj8.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/main-CJB3t94x.js">
+  <script type="module" crossorigin src="./assets/main-BH_dlksH.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/main-GU-ta-TM.js">
   <link rel="modulepreload" crossorigin href="./assets/theme-manager-CdLvXRPk.js">
   <link rel="modulepreload" crossorigin href="./assets/multi-game-app-CoV4zca3.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-CFm3YnTz.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-euZ7yZDa.css">
 <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
 <body>
     <div id="app">
@@ -47,6 +47,22 @@
                         <option value="local">Local</option>
                         <option value="remote">Remote</option>
                     </select>
+                </div>
+                <div class="game-info-display" id="game-info-display">
+                    <div class="game-name-display" id="game-name-display">
+                        <span class="game-name-label">Game:</span>
+                        <span class="game-name-text" id="game-name-text">Untitled Game</span>
+                        <button class="edit-game-name-btn" id="edit-game-name-btn" title="Edit game name">✏️</button>
+                    </div>
+                    <div class="opponent-display" id="opponent-display">
+                        <span class="opponent-label">vs</span>
+                        <span class="opponent-name" id="opponent-name">Player 2</span>
+                    </div>
+                    <div class="player-colors" id="player-colors">
+                        <span class="player-white">(W) You</span>
+                        <span class="player-separator">vs</span>
+                        <span class="player-black">(B) <span id="opponent-name-with-color">Player 2</span></span>
+                    </div>
                 </div>
                 <span id="header-turn-text">White to move</span>
                 <div class="turn-piece">
