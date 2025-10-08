@@ -26,11 +26,11 @@
     <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
     
     <!-- Styles -->
-  <script type="module" crossorigin src="./assets/main-Oaf46FI_.js"></script>
-  <link rel="modulepreload" crossorigin href="./assets/main-DZyhtj07.js">
+  <script type="module" crossorigin src="./assets/main-CPLXGxqG.js"></script>
+  <link rel="modulepreload" crossorigin href="./assets/main-iFaQIl4r.js">
   <link rel="modulepreload" crossorigin href="./assets/theme-manager-CdLvXRPk.js">
   <link rel="modulepreload" crossorigin href="./assets/multi-game-app-CoV4zca3.js">
-  <link rel="stylesheet" crossorigin href="./assets/main-D9PEwekL.css">
+  <link rel="stylesheet" crossorigin href="./assets/main-Cx4LdoR7.css">
 <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
 <body>
     <div id="app">
@@ -48,10 +48,6 @@
                         <option value="remote">Remote</option>
                     </select>
                 </div>
-                <span id="header-turn-text">White to move</span>
-                <div class="turn-piece">
-                    <span id="header-turn-piece">♔</span>
-                </div>
             </div>
             <div class="controls">
                 <button id="settings-btn" class="btn-secondary" title="Settings">⚙️</button>
@@ -61,39 +57,28 @@
         
         <main class="main">
             <div class="game-info">
-                <div class="game-info-grid" id="game-info-grid">
-                    <div class="game-info-column column-1">
+                <div class="game-info-bar" id="game-info-bar">
+                    <div class="game-info-left">
                         <div class="game-name-section">
                             <span class="game-name-label">Game:</span>
                             <span class="game-name-text" id="game-name-text-main">Untitled Game</span>
                             <button class="edit-game-name-btn" id="edit-game-name-btn-main" title="Edit game name">✏️</button>
                         </div>
                         <div class="next-move-section">
-                            <span class="next-move-label">Next Move:</span>
                             <span id="current-turn">White</span>
                             <span id="current-turn-piece">♔</span>
                         </div>
                     </div>
                     
-                    <div class="game-info-column column-2">
+                    <div class="game-info-right">
                         <div class="opponent-section">
-                            <span class="opponent-label">OPPONENT</span>
+                            <span class="opponent-label">vs</span>
                             <span class="opponent-name" id="opponent-name-main">Player 2</span>
                         </div>
                         <div class="player-colors-section">
-                            <span class="player-white">(W) You</span>
+                            <span class="player-white">(W)</span>
                             <span class="player-separator">vs</span>
-                            <span class="player-black">(B) <span id="opponent-name-with-color-main">Player 2</span></span>
-                        </div>
-                    </div>
-                    
-                    <div class="game-info-column column-3">
-                        <div class="game-stats-section">
-                            <span class="stats-label">Game Stats</span>
-                            <div class="stats-content">
-                                <span class="move-count">Moves: <span id="move-count">0</span></span>
-                                <span class="game-time">Time: <span id="game-time">00:00</span></span>
-                            </div>
+                            <span class="player-black">(B)</span>
                         </div>
                     </div>
                 </div>
