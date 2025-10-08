@@ -161,6 +161,108 @@ html, body {
   color: var(--text-color-light);
 }
 
+.game-info-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.game-name-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  color: var(--text-color-light);
+}
+
+.game-name-label {
+  font-weight: 500;
+  color: var(--text-color-muted);
+}
+
+.game-name-text {
+  font-weight: 600;
+  color: var(--accent-color);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-game-name-btn {
+  background: none;
+  border: none;
+  color: var(--text-color-muted);
+  cursor: pointer;
+  padding: 2px;
+  font-size: 0.6rem;
+  min-width: 16px;
+  min-height: 16px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.edit-game-name-btn:hover {
+  background-color: var(--bg-color-light);
+  color: var(--accent-color);
+}
+
+.opponent-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.65rem;
+  color: var(--text-color-muted);
+}
+
+.opponent-label {
+  font-weight: 500;
+}
+
+.opponent-name {
+  font-weight: 600;
+  color: var(--text-color-light);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.opponent-name:hover {
+  background-color: var(--bg-color-light);
+  color: var(--accent-color);
+}
+
+.player-colors {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6rem;
+  color: var(--text-color-muted);
+  margin-top: 0.1rem;
+}
+
+.player-white {
+  color: #f0f0f0;
+  font-weight: 500;
+}
+
+.player-black {
+  color: #888;
+  font-weight: 500;
+}
+
+.player-separator {
+  color: var(--text-color-muted);
+  font-weight: 400;
+}
+
+#opponent-name-with-color {
+  color: var(--text-color-light);
+}
+
 .turn-indicator-header #header-turn-text {
   font-size: 0.9rem;
   font-weight: 600;
@@ -866,6 +968,28 @@ button:disabled {
     font-size: 0.7rem;
     padding: 1px 4px;
     min-width: 50px;
+  }
+  
+  .game-info-display {
+    gap: 0.2rem;
+    margin-bottom: 0.2rem;
+  }
+  
+  .game-name-display {
+    font-size: 0.65rem;
+  }
+  
+  .game-name-text {
+    max-width: 80px;
+  }
+  
+  .opponent-display {
+    font-size: 0.6rem;
+  }
+  
+  .player-colors {
+    font-size: 0.55rem;
+    gap: 0.2rem;
   }
   
   .turn-indicator-header #header-turn-text {
@@ -1830,6 +1954,28 @@ button:disabled {
     font-size: 0.6rem;
     padding: 1px 3px;
     min-width: 40px;
+  }
+  
+  .game-info-display {
+    gap: 0.15rem;
+    margin-bottom: 0.15rem;
+  }
+  
+  .game-name-display {
+    font-size: 0.6rem;
+  }
+  
+  .game-name-text {
+    max-width: 60px;
+  }
+  
+  .opponent-display {
+    font-size: 0.55rem;
+  }
+  
+  .player-colors {
+    font-size: 0.5rem;
+    gap: 0.15rem;
   }
   
   .turn-indicator-header #header-turn-text {

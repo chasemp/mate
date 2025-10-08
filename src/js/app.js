@@ -48,6 +48,12 @@ class ChessApp {
     // Game mode (Local vs Remote)
     this.gameMode = localStorage.getItem('mate-game-mode') || 'local';
     
+    // Game naming and opponent tracking
+    this.currentGameName = localStorage.getItem('mate-current-game-name') || 'Untitled Game';
+    this.currentOpponent = localStorage.getItem('mate-current-opponent') || this.generateOpponentName();
+    this.gameId = this.generateGameId();
+    this.playerColor = 'white'; // Current player is always white
+    
     // Theme manager
     this.themeManager = new ThemeManager();
     
@@ -127,7 +133,11 @@ class ChessApp {
     
     // Share button
     this.addTouchEvents('share-btn', () => {
-      this.shareManager.shareGame();
+      if (this.gameMode === 'remote') {
+        this.shareGameInvite();
+      } else {
+        this.shareManager.shareGame();
+      }
     });
     
     // Game selection button
@@ -162,6 +172,19 @@ class ChessApp {
     if (gameModeSelect) {
       gameModeSelect.addEventListener('change', (e) => {
         this.handleGameModeChange(e.target.value);
+      });
+    }
+    
+    // Edit game name button
+    this.addTouchEvents('edit-game-name-btn', () => {
+      this.editGameName();
+    });
+    
+    // Opponent name click to select from contacts
+    const opponentName = document.getElementById('opponent-name');
+    if (opponentName) {
+      opponentName.addEventListener('click', () => {
+        this.showOpponentSelector();
       });
     }
     
@@ -206,6 +229,7 @@ class ChessApp {
       this.initializeLocalMode();
     }
     
+    this.updateGameInfoDisplay();
     this.showNotification(`Switched to ${mode} mode`);
   }
   
@@ -231,6 +255,248 @@ class ChessApp {
   }
   
   /**
+   * Generate unique game ID
+   */
+  generateGameId() {
+    return 'game_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+  
+  /**
+   * Generate opponent name
+   */
+  generateOpponentName() {
+    const adjectives = ['Quick', 'Smart', 'Bold', 'Wise', 'Swift', 'Sharp', 'Clever', 'Bright'];
+    const nouns = ['Player', 'Challenger', 'Opponent', 'Rival', 'Competitor', 'Adversary'];
+    
+    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    const number = Math.floor(Math.random() * 99) + 1;
+    
+    return `${adjective} ${noun} ${number}`;
+  }
+  
+  /**
+   * Update game info display based on current mode
+   */
+  updateGameInfoDisplay() {
+    const gameNameDisplay = document.getElementById('game-name-display');
+    const opponentDisplay = document.getElementById('opponent-display');
+    const playerColors = document.getElementById('player-colors');
+    const gameNameText = document.getElementById('game-name-text');
+    const opponentName = document.getElementById('opponent-name');
+    const opponentNameWithColor = document.getElementById('opponent-name-with-color');
+    
+    // Always show game info (both local and remote can have opponents)
+    gameNameDisplay.style.display = 'flex';
+    opponentDisplay.style.display = 'flex';
+    playerColors.style.display = 'flex';
+    
+    // Update content
+    gameNameText.textContent = this.currentGameName;
+    opponentName.textContent = this.currentOpponent;
+    opponentNameWithColor.textContent = this.currentOpponent;
+    
+    // Update player colors based on current turn
+    this.updatePlayerColors();
+  }
+  
+  /**
+   * Update player color display
+   */
+  updatePlayerColors() {
+    const playerWhite = document.querySelector('.player-white');
+    const playerBlack = document.querySelector('.player-black');
+    
+    if (playerWhite && playerBlack) {
+      // Current player is always white, opponent is always black
+      playerWhite.textContent = '(W) You';
+      playerBlack.innerHTML = `(B) <span id="opponent-name-with-color">${this.currentOpponent}</span>`;
+    }
+  }
+  
+  /**
+   * Check if Contact Picker API is available
+   */
+  isContactPickerAvailable() {
+    return 'contacts' in navigator && 'ContactsManager' in window;
+  }
+  
+  /**
+   * Check if Web Share API is available
+   */
+  isWebShareAvailable() {
+    return navigator.share && typeof navigator.share === 'function';
+  }
+  
+  /**
+   * Select opponent from contacts
+   */
+  async selectOpponentFromContacts() {
+    if (!this.isContactPickerAvailable()) {
+      this.showNotification('Contact picker not available on this device');
+      return;
+    }
+    
+    try {
+      const contacts = await navigator.contacts.select({
+        properties: ['name', 'tel', 'email']
+      });
+      
+      if (contacts && contacts.length > 0) {
+        const contact = contacts[0];
+        this.setOpponent(contact.name || contact.tel || 'Unknown Contact');
+        this.showNotification(`Selected opponent: ${this.currentOpponent}`);
+      }
+    } catch (error) {
+      console.log('Contact selection cancelled or failed:', error);
+      this.showNotification('Contact selection cancelled');
+    }
+  }
+  
+  /**
+   * Set opponent name and save to storage
+   */
+  setOpponent(name) {
+    this.currentOpponent = name;
+    localStorage.setItem('mate-current-opponent', name);
+    this.updateGameInfoDisplay();
+    this.addToRecentOpponents(name);
+  }
+  
+  /**
+   * Add opponent to recent opponents list
+   */
+  addToRecentOpponents(name) {
+    const recentOpponents = JSON.parse(localStorage.getItem('mate-recent-opponents') || '[]');
+    
+    // Remove if already exists
+    const index = recentOpponents.indexOf(name);
+    if (index > -1) {
+      recentOpponents.splice(index, 1);
+    }
+    
+    // Add to beginning
+    recentOpponents.unshift(name);
+    
+    // Keep only last 10
+    if (recentOpponents.length > 10) {
+      recentOpponents.splice(10);
+    }
+    
+    localStorage.setItem('mate-recent-opponents', JSON.stringify(recentOpponents));
+  }
+  
+  /**
+   * Get recent opponents list
+   */
+  getRecentOpponents() {
+    return JSON.parse(localStorage.getItem('mate-recent-opponents') || '[]');
+  }
+  
+  /**
+   * Set game name and save to storage
+   */
+  setGameName(name) {
+    this.currentGameName = name;
+    localStorage.setItem('mate-current-game-name', name);
+    this.updateGameInfoDisplay();
+  }
+  
+  /**
+   * Generate game invite URL
+   */
+  generateGameInviteUrl() {
+    const baseUrl = window.location.origin;
+    const gameData = {
+      gameId: this.gameId,
+      gameName: this.currentGameName,
+      gameType: this.multiGameApp.getCurrentGameId(),
+      mode: 'remote',
+      timestamp: Date.now()
+    };
+    
+    // Encode game data as base64
+    const encodedData = btoa(JSON.stringify(gameData));
+    return `${baseUrl}/?invite=${encodedData}`;
+  }
+  
+  /**
+   * Share game invite via Web Share API
+   */
+  async shareGameInvite() {
+    if (!this.isWebShareAvailable()) {
+      this.showNotification('Sharing not available on this device');
+      return;
+    }
+    
+    try {
+      const inviteUrl = this.generateGameInviteUrl();
+      await navigator.share({
+        title: 'Chess Game Invite',
+        text: `Join my chess game: ${this.currentGameName}`,
+        url: inviteUrl
+      });
+      this.showNotification('Game invite shared!');
+    } catch (error) {
+      console.log('Share cancelled or failed:', error);
+      this.showNotification('Share cancelled');
+    }
+  }
+  
+  /**
+   * Edit game name
+   */
+  editGameName() {
+    const newName = prompt('Enter game name:', this.currentGameName);
+    if (newName && newName.trim()) {
+      this.setGameName(newName.trim());
+      this.showNotification(`Game renamed to: ${this.currentGameName}`);
+    }
+  }
+  
+  /**
+   * Show opponent selector with contact options
+   */
+  showOpponentSelector() {
+    const recentOpponents = this.getRecentOpponents();
+    const options = [];
+    
+    // Add contact picker option if available (primary choice)
+    if (this.isContactPickerAvailable()) {
+      options.push('📱 Select from Contacts');
+    }
+    
+    // Add recent opponents
+    recentOpponents.forEach(opponent => {
+      options.push(`👤 ${opponent}`);
+    });
+    
+    // Add generate new opponent option
+    options.push('🎲 Generate New Opponent');
+    
+    // Show options
+    const choice = prompt(`Select opponent:\n\n${options.map((opt, i) => `${i + 1}. ${opt}`).join('\n')}\n\nEnter number:`, '1');
+    
+    if (choice) {
+      const choiceIndex = parseInt(choice) - 1;
+      
+      if (choiceIndex === 0 && this.isContactPickerAvailable()) {
+        // Contact picker
+        this.selectOpponentFromContacts();
+      } else if (choiceIndex === options.length - 1) {
+        // Generate new opponent
+        const newOpponent = this.generateOpponentName();
+        this.setOpponent(newOpponent);
+        this.showNotification(`New opponent: ${newOpponent}`);
+      } else if (choiceIndex > 0 && choiceIndex < options.length - 1) {
+        // Recent opponent
+        const opponentName = recentOpponents[choiceIndex - (this.isContactPickerAvailable() ? 1 : 0)];
+        this.setOpponent(opponentName);
+      }
+    }
+  }
+  
+  /**
    * Initialize game mode selector UI
    */
   initializeGameModeSelector() {
@@ -245,6 +511,9 @@ class ChessApp {
       } else {
         this.initializeLocalMode();
       }
+      
+      // Update the display
+      this.updateGameInfoDisplay();
     }
   }
   
@@ -795,6 +1064,9 @@ class ChessApp {
     
     // Update header turn piece
     document.getElementById('header-turn-piece').textContent = turnPiece;
+    
+    // Update player colors display
+    this.updatePlayerColors();
     
     // Update move history
     const history = this.engine.getMoveHistory();
