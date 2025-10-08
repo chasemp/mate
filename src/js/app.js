@@ -27,8 +27,13 @@ class ChessApp {
     this.ctx = this.canvas.getContext('2d');
     this.squareSize = this.canvas.width / 8;
     
-    // Chess engine
-    this.engine = new ChessEngine();
+    // Game engine (via multi-game system)
+    this.engine = this.multiGameApp.getCurrentGameEngine();
+    if (!this.engine) {
+      // Fallback to chess if no game is set
+      this.multiGameApp.switchGame('chess');
+      this.engine = this.multiGameApp.getCurrentGameEngine();
+    }
     this.engine.newGame();
     
     // Theme manager
@@ -46,6 +51,11 @@ class ChessApp {
     // Multi-game app
     this.multiGameApp = new MultiGameApp();
     this.gameUIManager = new GameUIManager();
+    
+    // Initialize game registry if not already done
+    if (!this.multiGameApp.gameRegistry) {
+      this.multiGameApp.initializeGameRegistry();
+    }
     
     // Game statistics
     this.gameStats = new GameStatistics();
@@ -228,13 +238,30 @@ class ChessApp {
    * Select a piece
    */
   selectPiece(row, col) {
-    const board = this.engine.getBoard();
-    const piece = board.getPiece(row, col);
-    const currentTurn = this.engine.getCurrentTurn();
+    const currentGameId = this.multiGameApp.getCurrentGameId();
+    let board, piece, currentTurn;
     
-    console.log('selectPiece called:', { row, col, piece, currentTurn });
+    if (currentGameId === 'checkers') {
+      board = this.engine.board;
+      piece = board[row][col];
+      currentTurn = this.engine.getCurrentTurn();
+    } else {
+      board = this.engine.getBoard();
+      piece = board.getPiece(row, col);
+      currentTurn = this.engine.getCurrentTurn();
+    }
     
-    if (piece && piece[0] === currentTurn[0]) {
+    console.log('selectPiece called:', { row, col, piece, currentTurn, gameId: currentGameId });
+    
+    // Check if piece belongs to current player
+    let isValidPiece = false;
+    if (currentGameId === 'checkers') {
+      isValidPiece = piece && piece.startsWith(currentTurn);
+    } else {
+      isValidPiece = piece && piece[0] === currentTurn[0];
+    }
+    
+    if (isValidPiece) {
       this.selectedSquare = { row, col };
       
       // Play select sound and haptic feedback
@@ -258,7 +285,7 @@ class ChessApp {
       
       this.render();
     } else {
-      console.log('Piece selection failed:', { piece, currentTurn, pieceColor: piece ? piece[0] : 'none', currentTurnColor: currentTurn[0] });
+      console.log('Piece selection failed:', { piece, currentTurn, pieceColor: piece ? (currentGameId === 'checkers' ? piece.split('_')[0] : piece[0]) : 'none', currentTurnColor: currentTurn });
     }
   }
   
@@ -677,15 +704,24 @@ class ChessApp {
    * Update game info display
    */
   updateGameInfo() {
+    const currentGameId = this.multiGameApp.getCurrentGameId();
     const turn = this.engine.getCurrentTurn();
-    const turnText = `${turn.charAt(0).toUpperCase() + turn.slice(1)} to move`;
+    
+    let turnText, turnPiece;
+    if (currentGameId === 'checkers') {
+      turnText = `${turn.charAt(0).toUpperCase() + turn.slice(1)} to move`;
+      turnPiece = turn === 'red' ? '●' : '○';
+    } else {
+      turnText = `${turn.charAt(0).toUpperCase() + turn.slice(1)} to move`;
+      turnPiece = turn === 'white' ? '♔' : '♚';
+    }
+    
     document.getElementById('current-turn').textContent = turnText;
     
     // Update header turn indicator
     document.getElementById('header-turn-text').textContent = turnText;
     
     // Update header turn piece
-    const turnPiece = turn === 'white' ? '♔' : '♚';
     document.getElementById('header-turn-piece').textContent = turnPiece;
     
     // Update move history
@@ -781,9 +817,22 @@ class ChessApp {
   }
   
   /**
-   * Draw chess pieces using current piece set
+   * Draw pieces using current piece set (supports chess and checkers)
    */
   drawPieces() {
+    const currentGameId = this.multiGameApp.getCurrentGameId();
+    
+    if (currentGameId === 'checkers') {
+      this.drawCheckersPieces();
+    } else {
+      this.drawChessPieces();
+    }
+  }
+  
+  /**
+   * Draw chess pieces using current piece set
+   */
+  drawChessPieces() {
     const board = this.engine.getBoard();
     const pieceSet = this.themeManager.getCurrentPieceSet();
     const style = pieceSet.style;
@@ -828,6 +877,75 @@ class ChessApp {
             this.ctx.strokeStyle = style.whiteShadow;
             this.ctx.fillStyle = style.whiteColor;
             if (style.glow) this.ctx.shadowColor = style.whiteColor;
+          }
+          
+          this.ctx.lineWidth = style.strokeWidth;
+          
+          // Draw piece with stroke and fill
+          this.ctx.strokeText(symbol, x, y);
+          this.ctx.fillText(symbol, x, y);
+        }
+      }
+    }
+    
+    // Reset shadow
+    this.ctx.shadowBlur = 0;
+  }
+  
+  /**
+   * Draw checkers pieces
+   */
+  drawCheckersPieces() {
+    const board = this.engine.board; // Checkers uses direct board access
+    const pieceSet = this.themeManager.getCurrentPieceSet();
+    const style = pieceSet.style;
+    
+    this.ctx.font = `${this.squareSize * style.fontSize}px Arial`;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    
+    // Apply glow effect if enabled
+    if (style.glow) {
+      this.ctx.shadowBlur = 8;
+    } else {
+      this.ctx.shadowBlur = 0;
+    }
+    
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+        if (piece) {
+          // Map checkers pieces to chess piece symbols for now
+          let symbol;
+          if (piece.includes('king')) {
+            symbol = piece.startsWith('red') ? '♔' : '♚';
+          } else {
+            symbol = piece.startsWith('red') ? '●' : '○';
+          }
+          
+          // Calculate display position (may be flipped based on orientation)
+          let displayCol = col;
+          let displayRow = row;
+          
+          if (this.boardOrientation === 'top') {
+            displayCol = 7 - col;
+            displayRow = 7 - row;
+          }
+          
+          const x = displayCol * this.squareSize + this.squareSize / 2;
+          const y = displayRow * this.squareSize + this.squareSize / 2;
+          
+          // Styling based on piece color
+          const isRedPiece = piece.startsWith('red');
+          
+          if (isRedPiece) {
+            this.ctx.strokeStyle = '#8B0000';
+            this.ctx.fillStyle = '#DC143C';
+            if (style.glow) this.ctx.shadowColor = '#DC143C';
+          } else {
+            this.ctx.strokeStyle = '#2F4F4F';
+            this.ctx.fillStyle = '#000000';
+            if (style.glow) this.ctx.shadowColor = '#000000';
           }
           
           this.ctx.lineWidth = style.strokeWidth;

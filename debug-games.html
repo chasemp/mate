@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Games</title>
+</head>
+<body>
+    <h1>Debug Games</h1>
+    <div id="output"></div>
+    
+    <script type="module">
+        import { MultiGameApp } from './src/js/multi-game-app.js';
+        
+        const app = new MultiGameApp();
+        const games = app.getAvailableGames();
+        
+        document.getElementById('output').innerHTML = `
+            <h2>Available Games (${games.length}):</h2>
+            <ul>
+                ${games.map(game => `<li>${game.icon} ${game.name} - ${game.description}</li>`).join('')}
+            </ul>
+        `;
+    </script>
+</body>
+</html>
