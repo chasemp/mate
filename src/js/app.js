@@ -261,7 +261,10 @@ class ChessApp {
    * Initialize remote multiplayer mode
    */
   initializeRemoteMode() {
-    // TODO: Initialize remote multiplayer features
+    // Remote mode features are already implemented:
+    // - Game naming and opponent tracking
+    // - Move sharing via SMS/WhatsApp
+    // - Auto-save and game management
     console.log('Initializing remote mode...');
     
     // For now, just show a placeholder
@@ -272,7 +275,10 @@ class ChessApp {
    * Initialize local multiplayer mode
    */
   initializeLocalMode() {
-    // TODO: Initialize local multiplayer features
+    // Local mode features are already implemented:
+    // - Local game play on same device
+    // - AI opponent support
+    // - Game state management
     console.log('Initializing local mode...');
     
     // For now, this is the default behavior
@@ -377,7 +383,7 @@ class ChessApp {
       // Save current game state for resume
       localStorage.setItem('mate-current-game-state', JSON.stringify(gameState));
       
-      console.log('Game auto-saved:', this.currentGameName);
+      // Game auto-saved
     } catch (error) {
       console.error('Error saving game state:', error);
     }
@@ -468,7 +474,7 @@ class ChessApp {
         modeSelect.value = this.gameMode;
       }
 
-      console.log('Game state loaded:', this.currentGameName);
+      // Game state loaded
       return true;
     } catch (error) {
       console.error('Error loading game state:', error);
@@ -617,7 +623,7 @@ class ChessApp {
     if (!moveData) {
       moveData = this.getLastMoveData();
       if (!moveData) {
-        console.log('No move to share');
+        // No move to share
         return false;
       }
     }
@@ -632,7 +638,7 @@ class ChessApp {
           text: shareText,
           url: shareUrl
         });
-        console.log('Move shared successfully via Web Share API');
+        // Move shared successfully via Web Share API
         return true;
       } catch (error) {
         if (error.name !== 'AbortError') {
@@ -1137,7 +1143,7 @@ class ChessApp {
         this.saveGameState(); // Save final state
       }
     } else if (result) {
-      console.log('Move successful!');
+      // Move successful
       
       // Tutorial task completed
       if (this.currentTask && this.learnMode.active) {
@@ -1873,7 +1879,7 @@ class ChessApp {
     if (sharedMove) {
       try {
         const moveData = JSON.parse(atob(sharedMove));
-        console.log('Loading shared move:', moveData);
+        // Loading shared move
         
         // Set game properties
         this.gameId = moveData.gameId;

@@ -40,7 +40,7 @@ class StatisticsApp {
     
     // Clear statistics
     this.addTouchEvents('clear-stats-btn', (e) => {
-      console.log('Clear stats button clicked', e);
+      // Clear stats button clicked
       this.showClearConfirmation();
     });
     

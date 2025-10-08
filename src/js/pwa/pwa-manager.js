@@ -340,7 +340,7 @@ export class PWAManager {
    */
   trackEvent(eventName, data = {}) {
     console.log('[PWA] Event:', eventName, data);
-    // TODO: Add analytics tracking if needed
+    // Analytics tracking can be added here if needed
     // e.g., gtag('event', eventName, data);
   }
 }
