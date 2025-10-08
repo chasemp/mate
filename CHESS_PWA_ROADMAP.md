@@ -2599,10 +2599,131 @@ src/
 ### **Phase 11: Advanced Features** 📊 (2-3 days)
 *Statistics, tournaments, variants, and AI settings*
 
-### **Phase 12: Social Features** 👥 (3-4 days)
+### **Phase 12: Real-Time Multiplayer Features** ⚡ (4-6 days)
+*WebRTC peer-to-peer play, hotspot multiplayer, and offline real-time gaming*
+
+#### **Phase 12.1: Game Mode System** (1 day) ✅ COMPLETED
+- **Local vs Remote Mode Selector** - Dropdown in header for game mode selection
+- **Mode Persistence** - Remembers selected mode across sessions
+- **UI Integration** - Seamlessly integrated into existing header layout
+- **Mobile Responsive** - Works on all screen sizes with proper touch targets
+
+#### **Phase 12.2: WebRTC Signaling System** (2-3 days)
+- **QR Code Generation** - Generate QR codes for game invites and signaling
+- **Web Share API Integration** - Native SMS/WhatsApp game invites
+- **Offline Signaling** - Exchange WebRTC offers/answers without servers
+- **Cross-Platform Support** - Works on Android/iOS with fallbacks
+
+#### **Phase 12.3: Hotspot Peer-to-Peer Play** (1-2 days)
+- **Android Mobile Hotspot** - Play directly over local Wi-Fi network
+- **No Internet Required** - Fully offline peer-to-peer connection
+- **Low Latency** - Real-time moves with minimal delay
+- **Auto-Discovery** - Automatic peer detection on same network
+
+#### **Phase 12.4: Real-Time Game Synchronization** (1 day)
+- **WebRTC DataChannel** - Live game state synchronization
+- **Move Validation** - Both clients verify moves in real-time
+- **Conflict Resolution** - Handle simultaneous moves gracefully
+- **Connection Management** - Auto-reconnect and error handling
+
+#### **WebRTC Implementation Details**
+
+**Signaling Methods (Priority Order):**
+1. **Web Share API** → SMS/WhatsApp (primary)
+2. **QR Code** → Camera scan (fallback)
+3. **Bluetooth** → Direct device pairing (advanced)
+
+**Connection Methods:**
+1. **Android Hotspot** → Local Wi-Fi P2P (primary)
+2. **Wi-Fi Direct** → OS-level P2P (advanced)
+3. **Bluetooth Data Channel** → Custom transport (fallback)
+
+**Technical Architecture:**
+```javascript
+// WebRTC Manager for real-time play
+class WebRTCManager {
+  constructor() {
+    this.peerConnection = null;
+    this.dataChannel = null;
+    this.isConnected = false;
+  }
+  
+  // Create offer for game invite
+  async createOffer() {
+    this.peerConnection = new RTCPeerConnection({
+      iceServers: [] // No STUN/TURN for local play
+    });
+    
+    this.dataChannel = this.peerConnection.createDataChannel('game');
+    this.setupDataChannel();
+    
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+    
+    return offer.sdp;
+  }
+  
+  // Handle incoming offer
+  async handleOffer(offerSDP) {
+    this.peerConnection = new RTCPeerConnection({
+      iceServers: []
+    });
+    
+    this.peerConnection.ondatachannel = (event) => {
+      this.dataChannel = event.channel;
+      this.setupDataChannel();
+    };
+    
+    await this.peerConnection.setRemoteDescription({
+      type: 'offer',
+      sdp: offerSDP
+    });
+    
+    const answer = await this.peerConnection.createAnswer();
+    await this.peerConnection.setLocalDescription(answer);
+    
+    return answer.sdp;
+  }
+  
+  // Setup data channel for game moves
+  setupDataChannel() {
+    this.dataChannel.onopen = () => {
+      this.isConnected = true;
+      this.onConnectionEstablished();
+    };
+    
+    this.dataChannel.onmessage = (event) => {
+      const move = JSON.parse(event.data);
+      this.onMoveReceived(move);
+    };
+  }
+  
+  // Send move to opponent
+  sendMove(move) {
+    if (this.isConnected && this.dataChannel) {
+      this.dataChannel.send(JSON.stringify(move));
+    }
+  }
+}
+```
+
+**User Experience Flow:**
+1. **Player A** creates game → generates QR code
+2. **Player B** scans QR → joins via hotspot
+3. **Real-time play** with instant moves
+4. **Game auto-saves** to competitors page
+
+**Offline Capabilities:**
+- ✅ **No Internet Required** - Works completely offline
+- ✅ **No Servers Needed** - Direct peer-to-peer connection
+- ✅ **Low Latency** - 1-5ms typical response time
+- ✅ **Cross-Platform** - Android/iOS compatible
+- ✅ **Battery Efficient** - Minimal power consumption
+
+### **Phase 13: Social Features** 👥 (3-4 days)
 *Player profiles, friend system, and enhanced sharing*
 
-### **Phase 13: Web3 Identity & Cryptographic Signing** 🔐 (4-5 days)
+### **Phase 14: Web3 Identity & Cryptographic Signing** 🔐 (4-5 days)
 *Cryptographic identity, secure key storage, and move provenance*
 
 **Goal:** Add Web3 cryptographic features for player identity, move signing, and score provenance
@@ -2867,8 +2988,9 @@ That's it! Every push to main automatically deploys `/docs`.
 | **Phase 9** | Multi-Game Foundation | 2-3 days | Future | ✅ Done |
 | **Phase 10** | Checkers Implementation | 5-7 days | Future | ✅ Done |
 | **Phase 11** | Advanced Features | 2-3 days | High | ✅ Done |
-| **Phase 12** | Social Features | 3-4 days | High | 📋 Planned |
-| **Phase 13** | Web3 Identity & Crypto | 4-5 days | High | 📋 Planned |
+| **Phase 12** | Real-Time Multiplayer | 4-6 days | High | 🚧 In Progress |
+| **Phase 13** | Social Features | 3-4 days | High | 📋 Planned |
+| **Phase 14** | Web3 Identity & Crypto | 4-5 days | High | 📋 Planned |
 
 **Chess Launch:** 16-25 days (3-5 weeks)  
 **Multi-Game Platform:** +10-14 days (~2 weeks more)
