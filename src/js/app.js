@@ -95,15 +95,8 @@ class ChessApp {
     this.canvas.addEventListener('click', this.handleBoardClick.bind(this));
     this.canvas.addEventListener('touchstart', (e) => {
       e.preventDefault();
+      console.log('Touch start:', e.touches[0]);
       this.handleBoardClick(e.touches[0]);
-    }, { passive: false });
-    
-    // Add touchend for better mobile support
-    this.canvas.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      if (e.changedTouches.length > 0) {
-        this.handleBoardClick(e.changedTouches[0]);
-      }
     }, { passive: false });
     
     // Learn to Play button
@@ -201,13 +194,27 @@ class ChessApp {
     let col = Math.floor(x / this.squareSize);
     let row = Math.floor(y / this.squareSize);
     
+    console.log('handleBoardClick:', { 
+      clientX: event.clientX, 
+      clientY: event.clientY, 
+      rectLeft: rect.left, 
+      rectTop: rect.top, 
+      x, y, 
+      squareSize: this.squareSize,
+      rawCol: col,
+      rawRow: row
+    });
+    
     // Flip coordinates if board is oriented from top
     if (this.boardOrientation === 'top') {
       row = 7 - row;
       col = 7 - col;
     }
 
-    if (row < 0 || row > 7 || col < 0 || col > 7) return;
+    if (row < 0 || row > 7 || col < 0 || col > 7) {
+      console.log('Click outside board bounds');
+      return;
+    }
 
     console.log('Clicked square:', { row, col });
     
@@ -227,6 +234,8 @@ class ChessApp {
     const board = this.engine.getBoard();
     const piece = board.getPiece(row, col);
     const currentTurn = this.engine.getCurrentTurn();
+    
+    console.log('selectPiece called:', { row, col, piece, currentTurn });
     
     if (piece && piece[0] === currentTurn[0]) {
       this.selectedSquare = { row, col };
@@ -251,6 +260,8 @@ class ChessApp {
       }
       
       this.render();
+    } else {
+      console.log('Piece selection failed:', { piece, currentTurn, pieceColor: piece ? piece[0] : 'none', currentTurnColor: currentTurn[0] });
     }
   }
   
