@@ -183,16 +183,21 @@ class ChessApp {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    let col = Math.floor(x / this.squareSize);
-    let row = Math.floor(y / this.squareSize);
+    // Calculate square size based on actual displayed canvas size
+    const actualSquareSize = rect.width / 8;
+    let col = Math.floor(x / actualSquareSize);
+    let row = Math.floor(y / actualSquareSize);
     
     console.log('handleBoardClick:', { 
       clientX: event.clientX, 
       clientY: event.clientY, 
       rectLeft: rect.left, 
       rectTop: rect.top, 
+      rectWidth: rect.width,
+      rectHeight: rect.height,
       x, y, 
-      squareSize: this.squareSize,
+      actualSquareSize: actualSquareSize,
+      originalSquareSize: this.squareSize,
       rawCol: col,
       rawRow: row
     });
