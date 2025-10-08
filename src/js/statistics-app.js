@@ -16,6 +16,7 @@ class StatisticsApp {
   }
   
   init() {
+    this.hideModal(); // Ensure modal is hidden on page load
     this.setupEventListeners();
     this.loadStatistics();
     this.renderDailyChart();
@@ -38,7 +39,8 @@ class StatisticsApp {
     });
     
     // Clear statistics
-    this.addTouchEvents('clear-stats-btn', () => {
+    this.addTouchEvents('clear-stats-btn', (e) => {
+      console.log('Clear stats button clicked', e);
       this.showClearConfirmation();
     });
     
