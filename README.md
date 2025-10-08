@@ -1,17 +1,32 @@
-# Chess PWA ♟️
+# Mate Chess PWA ♟️
 
-Offline multiplayer chess game with SMS-based game sharing. Inspired by [Lichess](https://github.com/lichess-org/lichobile).
+**Play chess with friends via SMS and WhatsApp!** A complete offline multiplayer chess experience with remote play, game management, and seamless sharing. Inspired by [Lichess](https://github.com/lichess-org/lichobile).
 
 ## ✨ Features
 
-- ♟️ **Full chess rules** - All piece movements, check, checkmate, stalemate
-- 🎨 **8 board themes** + **5 piece sets** - Customize your board style ([Theme Guide](THEME_GUIDE.md))
-- 📱 **Progressive Web App** - Installable, offline-capable, app-like experience
-- 🖱️ **Touch & click support** - Tap to select, tap to move
-- 🔄 **Move highlights** - Selected pieces, legal moves, last move, check
-- ⏪ **Undo moves** - Take back your last move
-- 📋 **Move history** - See all moves in algebraic notation
-- 🚀 **No backend** - Completely client-side, no server needed
+### 🎮 **Multi-Game Support**
+- ♟️ **Chess** - Full rules with all special moves
+- ● **Checkers** - Classic checkers with king promotion
+- 🔄 **More games coming** - Othello, Breakthrough, Go
+
+### 📱 **Remote Multiplayer**
+- 📲 **SMS/WhatsApp sharing** - Send moves via any messaging app
+- 🔗 **One-click sharing** - Web Share API for native mobile sharing
+- 🎯 **Move animations** - Visual feedback when receiving moves
+- 💾 **Auto-save** - Never lose your progress
+- 👥 **Competitors page** - Manage all your ongoing games
+
+### 🎨 **Customization**
+- 🎨 **8 board themes** + **5 piece sets** - Mix and match styles
+- 📱 **Mobile-optimized** - Ultra-compact layout for small screens
+- 🌙 **Dark mode** - Easy on the eyes
+- ⚙️ **Settings** - Customize your experience
+
+### 🚀 **Progressive Web App**
+- 📱 **Installable** - Add to home screen like a native app
+- 🔄 **Offline-capable** - Play without internet
+- 🖱️ **Touch & click** - Works on all devices
+- ⚡ **Fast loading** - Optimized for speed
 
 ## 🎨 Themes
 
@@ -24,27 +39,36 @@ See [THEME_GUIDE.md](THEME_GUIDE.md) for visual examples and combinations.
 
 ## 🚀 Quick Start
 
+### Development
 ```bash
 npm install
 npm run dev
 ```
-
 Visit http://localhost:3458
 
-## 📱 Try It Now
-
-1. Click a piece (white moves first)
-2. Legal moves highlight in green
-3. Click destination to move
-4. Click ⚙️ for theme settings
+### Live Demo
+🌐 **[Play Now at mate.523.life](https://mate.523.life/)**
 
 ## 🎮 How to Play
 
-- **Select**: Click/tap a piece to select (highlights in yellow)
-- **Move**: Click/tap a highlighted square to move
-- **Undo**: Click the undo button (↩️) to take back your move
-- **New Game**: Click "New Game" to start fresh
-- **Themes**: Click ⚙️ to customize board and pieces
+### Local Play
+1. **Select** a piece (white moves first)
+2. **Move** to a highlighted square
+3. **Undo** moves with the ↩️ button
+4. **New Game** to start fresh
+
+### Remote Multiplayer
+1. **Set Game Mode** to "Remote" in the header
+2. **Name your game** and select an opponent
+3. **Make your move** and click "Share"
+4. **Send via SMS/WhatsApp** using the generated link
+5. **Opponent receives** the move and continues the game
+
+### Game Management
+- **👥 Competitors** - View all your ongoing games
+- **📱 Auto-save** - Games save automatically every 30 seconds
+- **🔄 Resume** - Continue any game from where you left off
+- **📊 Stats** - Track your game history and performance
 
 ## 🚢 Deployment
 
@@ -83,20 +107,29 @@ See `CHESS_PWA_ROADMAP.md` for detailed development plan.
 
 ## 🎯 Roadmap
 
-- [x] Core chess engine with all basic moves
-- [x] Board rendering with themes
-- [x] Theme system (5 piece sets, 8 board themes)
-- [x] Move validation (check, checkmate, stalemate)
-- [x] Special moves (castling, en passant, pawn promotion)
-- [x] Multi-game system (Chess + Checkers)
-- [x] AI opponent with 20 difficulty levels
-- [x] Coach mode and learn-to-play tutorial
-- [x] Game mode selector (Local vs Remote)
-- [x] Mobile-optimized ultra-compact layout
-- [ ] WebRTC real-time multiplayer
-- [ ] URL-based game sharing
-- [ ] Move replay system
-- [ ] Game history storage
+### ✅ **Completed Features**
+- [x] **Core chess engine** with all basic moves and special moves
+- [x] **Multi-game system** (Chess + Checkers, with Othello, Breakthrough, Go planned)
+- [x] **Theme system** (5 piece sets, 8 board themes)
+- [x] **AI opponent** with 20 difficulty levels
+- [x] **Coach mode** and learn-to-play tutorial
+- [x] **Mobile-optimized** ultra-compact layout
+- [x] **Remote multiplayer** via SMS/WhatsApp sharing
+- [x] **Game management** with competitors page
+- [x] **Auto-save** and game persistence
+- [x] **Move sharing** with embedded game data
+- [x] **URL-based** game and move sharing
+
+### 🚧 **In Progress**
+- [ ] **WebRTC real-time multiplayer** (peer-to-peer)
+- [ ] **QR code generation** for easy game invites
+- [ ] **Bluetooth fallback** for offline connections
+
+### 🔮 **Future Plans**
+- [ ] **Move replay system** with step-by-step playback
+- [ ] **Tournament mode** with brackets and scoring
+- [ ] **Social features** (friends, achievements, leaderboards)
+- [ ] **Advanced AI** with opening book and endgame tablebase
 
 ## 📚 Documentation
 
