@@ -109,6 +109,13 @@ class SettingsApp {
     const sets = this.themeManager.getPieceSets();
     const currentSet = this.themeManager.currentPieceSet;
     
+    console.log('Rendering piece sets:', { container, sets, currentSet });
+    
+    if (!container) {
+      console.error('Piece sets container not found!');
+      return;
+    }
+    
     container.innerHTML = '';
     
     Object.entries(sets).forEach(([id, set]) => {
