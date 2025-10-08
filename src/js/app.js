@@ -136,20 +136,12 @@ class ChessApp {
       }
     });
     
-    // New Game button (link)
-    this.addTouchEvents('new-game-btn', () => {
-      // Link navigation will handle this
-    });
-    
     // New Game header button
     this.addTouchEvents('new-game-header', () => {
       window.location.href = '/new-game.html';
     });
     
-    // Stats button (link)
-    this.addTouchEvents('stats-btn', () => {
-      // Link navigation will handle this
-    });
+    // Stats button (link) - let the href handle navigation
   }
   
   /**
