@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Checkers</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        #output { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Checkers Integration Test</h1>
+    
+    <div class="test-section">
+        <h3>Available Games</h3>
+        <button onclick="loadGames()">Load Games</button>
+        <div id="games-output"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Switch to Checkers</h3>
+        <button onclick="switchToCheckers()">Switch to Checkers</button>
+        <div id="checkers-output"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Checkers Game</h3>
+        <button onclick="testCheckersGame()">Test Checkers Game</button>
+        <div id="game-output"></div>
+    </div>
+    
+    <div id="output"></div>
+    
+    <script type="module">
+        import { MultiGameApp } from './src/js/multi-game-app.js';
+        
+        const app = new MultiGameApp();
+        
+        window.loadGames = function() {
+            const games = app.getAvailableGames();
+            document.getElementById('games-output').innerHTML = `
+                <p>Found ${games.length} games:</p>
+                <ul>
+                    ${games.map(game => `<li>${game.icon} ${game.name} - ${game.description}</li>`).join('')}
+                </ul>
+            `;
+        };
+        
+        window.switchToCheckers = function() {
+            const switched = app.switchGame('checkers');
+            document.getElementById('checkers-output').innerHTML = `
+                <p>Switched to checkers: ${switched}</p>
+                <p>Current game: ${app.getCurrentGameId()}</p>
+            `;
+        };
+        
+        window.testCheckersGame = function() {
+            if (app.getCurrentGameId() !== 'checkers') {
+                app.switchGame('checkers');
+            }
+            
+            const engine = app.getCurrentGameEngine();
+            const turn = engine.getCurrentTurn();
+            const board = engine.board;
+            
+            document.getElementById('game-output').innerHTML = `
+                <p>Current turn: ${turn}</p>
+                <p>Board type: ${Array.isArray(board) ? 'Array' : 'Object'}</p>
+                <p>Board size: ${board.length}x${board[0].length}</p>
+                <p>Pieces on board: ${board.flat().filter(p => p).length}</p>
+            `;
+        };
+        
+        // Auto-load games on page load
+        loadGames();
+    </script>
+</body>
+</html>
