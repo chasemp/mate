@@ -51,8 +51,13 @@ class ChessApp {
     // Game naming and opponent tracking
     this.currentGameName = localStorage.getItem('mate-current-game-name') || 'Untitled Game';
     this.currentOpponent = localStorage.getItem('mate-current-opponent') || this.generateOpponentName();
-    this.gameId = this.generateGameId();
+    this.gameId = localStorage.getItem('mate-current-game-id') || this.generateGameId();
     this.playerColor = 'white'; // Current player is always white
+    
+    // Game persistence
+    this.autoSaveEnabled = true;
+    this.saveInterval = 30000; // Save every 30 seconds
+    this.lastSaveTime = 0;
     
     // Theme manager
     this.themeManager = new ThemeManager();
@@ -96,6 +101,8 @@ class ChessApp {
     // Initialize game mode selector
     this.initializeGameModeSelector();
     
+    // Start auto-save timer
+    this.startAutoSave();
     
     // Check for new game from setup pages
     this.checkForNewGame();
@@ -132,14 +139,14 @@ class ChessApp {
       this.toggleCoachMode();
     });
     
-    // Share button
+        // Share button
     this.addTouchEvents('share-btn', () => {
       if (this.gameMode === 'remote') {
         this.shareGameInvite();
       } else {
-        this.shareManager.shareGame();
+          this.shareManager.shareGame();
       }
-    });
+        });
     
     // Game selection button
     this.addTouchEvents('game-select-btn', () => {
@@ -315,6 +322,156 @@ class ChessApp {
       playerBlack.textContent = '(B)';
     }
   }
+
+  /**
+   * Start auto-save timer
+   */
+  startAutoSave() {
+    if (this.autoSaveEnabled) {
+      setInterval(() => {
+        this.autoSaveGame();
+      }, this.saveInterval);
+    }
+  }
+
+  /**
+   * Auto-save game state
+   */
+  autoSaveGame() {
+    if (!this.autoSaveEnabled) return;
+
+    const now = Date.now();
+    if (now - this.lastSaveTime < this.saveInterval) return;
+
+    this.saveGameState();
+    this.lastSaveTime = now;
+  }
+
+  /**
+   * Save current game state
+   */
+  saveGameState() {
+    try {
+      const gameState = {
+        id: this.gameId,
+        gameName: this.currentGameName,
+        opponent: this.currentOpponent,
+        gameType: this.multiGameApp.getCurrentGameId(),
+        gameMode: this.gameMode,
+        status: this.engine.isGameOver() ? 'completed' : 'in-progress',
+        moveCount: this.engine.getMoveCount ? this.engine.getMoveCount() : 0,
+        currentTurn: this.engine.getCurrentTurn ? this.engine.getCurrentTurn() : 'white',
+        boardState: this.engine.getBoardState ? this.engine.getBoardState() : null,
+        gameHistory: this.engine.getGameHistory ? this.engine.getGameHistory() : [],
+        lastPlayed: new Date().toISOString(),
+        created: this.getGameCreatedDate(),
+        playerColor: this.playerColor
+      };
+
+      // Save to games list
+      this.saveGameToList(gameState);
+      
+      // Save current game state for resume
+      localStorage.setItem('mate-current-game-state', JSON.stringify(gameState));
+      
+      console.log('Game auto-saved:', this.currentGameName);
+    } catch (error) {
+      console.error('Error saving game state:', error);
+    }
+  }
+
+  /**
+   * Save game to the games list
+   */
+  saveGameToList(gameState) {
+    let games = [];
+    const gamesData = localStorage.getItem('mate-games');
+    
+    if (gamesData) {
+      try {
+        games = JSON.parse(gamesData);
+      } catch (error) {
+        console.error('Error parsing games data:', error);
+        games = [];
+      }
+    }
+
+    // Update existing game or add new one
+    const existingIndex = games.findIndex(g => g.id === gameState.id);
+    if (existingIndex >= 0) {
+      games[existingIndex] = gameState;
+    } else {
+      games.push(gameState);
+    }
+
+    // Sort by last played date (most recent first)
+    games.sort((a, b) => new Date(b.lastPlayed) - new Date(a.lastPlayed));
+
+    localStorage.setItem('mate-games', JSON.stringify(games));
+  }
+
+  /**
+   * Get game created date (from existing game or current time)
+   */
+  getGameCreatedDate() {
+    const gamesData = localStorage.getItem('mate-games');
+    if (gamesData) {
+      try {
+        const games = JSON.parse(gamesData);
+        const existingGame = games.find(g => g.id === this.gameId);
+        if (existingGame && existingGame.created) {
+          return existingGame.created;
+        }
+      } catch (error) {
+        console.error('Error parsing games data:', error);
+      }
+    }
+    return new Date().toISOString();
+  }
+
+  /**
+   * Load game state from storage
+   */
+  loadGameState(gameId = null) {
+    const id = gameId || this.gameId;
+    const gamesData = localStorage.getItem('mate-games');
+    
+    if (!gamesData) return false;
+
+    try {
+      const games = JSON.parse(gamesData);
+      const game = games.find(g => g.id === id);
+      
+      if (!game) return false;
+
+      // Restore game state
+      this.gameId = game.id;
+      this.currentGameName = game.gameName;
+      this.currentOpponent = game.opponent;
+      this.gameMode = game.gameMode || 'local';
+      this.playerColor = game.playerColor || 'white';
+
+      // Update UI
+      this.updateGameInfoDisplay();
+
+      // Restore game engine state if available
+      if (game.boardState && this.engine.restoreGameState) {
+        this.engine.restoreGameState(game.boardState);
+      }
+
+      // Update game mode selector
+      const modeSelect = document.getElementById('game-mode-select');
+      if (modeSelect) {
+        modeSelect.value = this.gameMode;
+      }
+
+      console.log('Game state loaded:', this.currentGameName);
+      return true;
+    } catch (error) {
+      console.error('Error loading game state:', error);
+      return false;
+    }
+  }
   
   /**
    * Check if Contact Picker API is available
@@ -363,6 +520,9 @@ class ChessApp {
     localStorage.setItem('mate-current-opponent', name);
     this.updateGameInfoDisplay();
     this.addToRecentOpponents(name);
+    
+    // Auto-save when opponent changes
+    this.saveGameState();
   }
   
   /**
@@ -402,6 +562,9 @@ class ChessApp {
     this.currentGameName = name;
     localStorage.setItem('mate-current-game-name', name);
     this.updateGameInfoDisplay();
+    
+    // Auto-save when game name changes
+    this.saveGameState();
   }
   
   /**
@@ -684,6 +847,14 @@ class ChessApp {
       this.legalMoves = [];
       this.render();
       this.updateGameInfo();
+      
+      // Auto-save after move
+      this.saveGameState();
+      
+      // Check if game is over and save final state
+      if (this.engine.isGameOver && this.engine.isGameOver()) {
+        this.saveGameState(); // Save final state
+      }
     } else if (result) {
       console.log('Move successful!');
       
