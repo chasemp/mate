@@ -939,7 +939,64 @@ button:disabled {
   }
   
   .main {
+    padding: 0.125rem;
+    gap: 0.25rem;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .game-info {
+    margin-bottom: 0.25rem;
+    padding: 0.25rem;
+  }
+  
+  .turn-indicator {
+    font-size: 0.9rem;
+    margin-bottom: 0.125rem;
+  }
+  
+  .game-status {
+    font-size: 0.8rem;
+    margin-bottom: 0.125rem;
+  }
+  
+  .board-container {
+    margin: 0.25rem auto;
+  }
+  
+  .footer {
     padding: 0.5rem;
+    gap: 0.25rem;
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-darker);
+    z-index: 10;
+  }
+  
+  .footer button,
+  .footer a {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    min-height: 40px;
+    min-width: 40px;
+    gap: 0.2rem;
+  }
+  
+  .game-info {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .turn-indicator {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .game-status {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
   }
   
   .footer {
